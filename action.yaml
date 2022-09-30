@@ -1,0 +1,81 @@
+name: slack-notification-action
+description: notify the current workflow run to a Slack channel
+
+inputs:
+  slack-channel-id:
+    description: ID of the Slack channel
+    required: true
+  slack-app-token:
+    description: Slack App Bot Token
+    required: true
+  icon:
+    description: Icon in payload
+    required: false
+    default: |
+      :x:
+  github-token:
+    description: GitHub token (optional)
+    required: true
+    default: ${{ github.token }}
+
+runs:
+  using: composite
+  steps:
+    - uses: int128/workflow-run-summary-action@v1
+      id: summary
+      with:
+        token: ${{ inputs.github-token }}
+
+    - uses: actions/github-script@v6
+      id: payload
+      env:
+        header: |
+          @${{ github.actor }} ${{ github.event.workflow_run.conclusion }} in ${{ github.repository }} repository:
+        detail: |
+          ${{ steps.summary.outputs.annotation-failure-messages }}
+        contextBranch: |
+          ${{ inputs.icon }} branch: *${{ github.event.workflow_run.head_branch }}*
+        contextWorkflow: |
+          workflow: <${{ github.event.workflow_run.html_url }}|${{ github.event.workflow_run.name }}>
+      with:
+        # preview on https://app.slack.com/block-kit-builder
+        script: |
+          const payloadLines = [process.env.header]
+          if (process.env.detail) {
+            payloadLines.push('```', process.env.detail, '```')
+          }
+          return {
+            blocks: [
+              {
+                type: "section",
+                text: {
+                  type: "mrkdwn",
+                  text: payloadLines.join('\n')
+                }
+              },
+              {
+                "type": "context",
+                "elements": [
+                  {
+                    "type": "mrkdwn",
+                    "text": process.env.contextBranch
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": process.env.contextWorkflow
+                  }
+                ]
+              }
+            ]
+          }
+
+    # Don't notify events if conclusion is cancelled or skipped
+    - if: |
+        steps.summary.outputs.cancelled == 'false' &&
+        steps.summary.outputs.skipped == 'false'
+      uses: slackapi/slack-github-action@v1
+      with:
+        channel-id: ${{ inputs.slack-channel-id }}
+        payload: ${{ steps.payload.outputs.result }}
+      env:
+        SLACK_BOT_TOKEN: ${{ inputs.slack-app-token }}

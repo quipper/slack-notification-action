@@ -5,6 +5,12 @@ on:
     paths:
       - action.yaml
       - .github/workflows/example.yaml
+  push:
+    branches:
+      - v1
+    paths:
+      - action.yaml
+      - .github/workflows/example.yaml
 
 jobs:
   send:

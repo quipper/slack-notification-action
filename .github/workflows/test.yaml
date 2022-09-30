@@ -14,7 +14,6 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./
         with:
-          slack-channel-id: ABCDEF123 # your Slack channel
+          # dummy values
+          slack-channel-id: ABCDEF123
           slack-app-token: ${{ secrets.SLACK_APP_TOKEN }}
-        # for testing on pull request
-        continue-on-error: true

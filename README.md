@@ -1,4 +1,4 @@
-# slack-notification-action
+# slack-notification-action [![test](https://github.com/quipper/slack-notification-action/actions/workflows/test.yaml/badge.svg)](https://github.com/quipper/slack-notification-action/actions/workflows/test.yaml)
 
 This is an action to notify the workflow run from GitHub Actions to a Slack channel.
 
@@ -13,7 +13,7 @@ This is an action to notify the workflow run from GitHub Actions to a Slack chan
 
 ### Create a workflow
 
-To nofity a failure on main branch, create the following workflow:
+To nofity a failure of workflow run on main branch, create the following workflow:
 
 ```yaml
 name: slack-notification
@@ -53,5 +53,5 @@ It is recommended to set a personal access token or GitHub App token to mitigate
 |------|----------|------------
 | `slack-channel-id` | (required) | ID of the Slack channel
 | `slack-app-token` | (required) | Slack App Bot Token
-| `icon` | `:x:` | Icon in the payload
+| `icon` | :x: | Icon in the payload
 | `github-token` | `github.token` | GitHub token

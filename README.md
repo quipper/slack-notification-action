@@ -1,4 +1,4 @@
-# slack-notification-action
+# slack-notification-action [![test](https://github.com/quipper/slack-notification-action/actions/workflows/test.yaml/badge.svg)](https://github.com/quipper/slack-notification-action/actions/workflows/test.yaml)
 
 This is an action to notify the workflow run from GitHub Actions to a Slack channel.
 

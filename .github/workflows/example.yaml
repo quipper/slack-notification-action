@@ -1,17 +1,6 @@
-name: example
+name: test
 
 on:
-  workflow_run:
-    workflows:
-      - '**'
-      # you can exclude some workflows, like:
-      # - '!*-metrics'
-    branches:
-      - main
-    types:
-      - completed
-
-  # for testing on pull request
   pull_request:
     paths:
       - action.yaml
@@ -20,13 +9,9 @@ on:
 jobs:
   send:
     timeout-minutes: 10
-    # for testing on pull request
-    if: |
-      github.event.workflow_run.conclusion == 'failure' ||
-      github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - uses: quipper/slack-notification-action@v1
+      - uses: ./
         with:
           slack-channel-id: ABCDEF123 # your Slack channel
           slack-app-token: ${{ secrets.SLACK_APP_TOKEN }}

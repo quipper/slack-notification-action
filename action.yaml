@@ -71,8 +71,8 @@ runs:
 
     # Don't notify events if conclusion is cancelled or skipped
     - if: |
-        steps.summary.outputs.cancelled == 'false' &&
-        steps.summary.outputs.skipped == 'false'
+        steps.summary.outputs.cancelled != 'true' &&
+        steps.summary.outputs.skipped != 'true'
       uses: slackapi/slack-github-action@v1
       with:
         channel-id: ${{ inputs.slack-channel-id }}

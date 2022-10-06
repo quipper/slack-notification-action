@@ -53,5 +53,4 @@ It is recommended to set a personal access token or GitHub App token to mitigate
 |------|----------|------------
 | `slack-channel-id` | (required) | ID of the Slack channel
 | `slack-app-token` | (required) | Slack App Bot Token
-| `icon` | :x: | Icon in the payload
 | `github-token` | `github.token` | GitHub token

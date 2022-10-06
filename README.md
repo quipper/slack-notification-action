@@ -54,3 +54,10 @@ It is recommended to set a personal access token or GitHub App token to mitigate
 | `slack-channel-id` | (required) | ID of the Slack channel
 | `slack-app-token` | (required) | Slack App Bot Token
 | `github-token` | `github.token` | GitHub token
+
+### Outputs
+
+| Name | Description
+|------|------------
+| `annotation-failure-messages` | Annotation messages of failure in the workflow run
+| `payload` | JSON payload

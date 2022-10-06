@@ -13,6 +13,14 @@ inputs:
     required: true
     default: ${{ github.token }}
 
+outputs:
+  annotation-failure-messages:
+    description: annotation messages of failure in the workflow run
+    value: ${{ steps.summary.outputs.annotation-failure-messages }}
+  payload:
+    description: JSON payload
+    value: ${{ steps.payload.outputs.result }}
+
 runs:
   using: composite
   steps:

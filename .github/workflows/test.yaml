@@ -13,13 +13,15 @@ on:
       - .github/workflows/test.yaml
 
 jobs:
-  send:
+  smoke-test:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./
+
+      # This does not send a payload actually
+      - name: Run quipper/slack-notification-action
+        uses: ./
         with:
-          # dummy values
           slack-channel-id: ABCDEF123
           slack-app-token: ${{ secrets.SLACK_APP_TOKEN }}

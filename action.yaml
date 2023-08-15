@@ -82,10 +82,12 @@ runs:
             ]
           }
 
-    # Don't notify events if conclusion is cancelled or skipped
+    # Don't notify if conclusion is cancelled or skipped.
+    # Skip if Slack App token is not set such as test workflow.
     - if: |
         steps.summary.outputs.cancelled != 'true' &&
-        steps.summary.outputs.skipped != 'true'
+        steps.summary.outputs.skipped != 'true' &&
+        inputs.slack-app-token
       uses: slackapi/slack-github-action@v1
       with:
         channel-id: ${{ inputs.slack-channel-id }}

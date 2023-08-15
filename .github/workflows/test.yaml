@@ -21,7 +21,10 @@ jobs:
 
       # This does not send a payload actually
       - name: Run quipper/slack-notification-action
+        id: slack-notification-action
         uses: ./
         with:
           slack-channel-id: ABCDEF123
           slack-app-token: ${{ secrets.SLACK_APP_TOKEN }}
+
+      - run: echo '${{ steps.slack-notification-action.outputs.payload }}' | jq .

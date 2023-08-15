@@ -17,6 +17,9 @@ outputs:
   annotation-failure-messages:
     description: annotation messages of failure in the workflow run
     value: ${{ steps.summary.outputs.annotation-failure-messages }}
+  pull-request-number:
+    description: associated pull request number, if exists
+    value: ${{ steps.summary.outputs.pull-request-number }}
   payload:
     description: JSON payload
     value: ${{ steps.payload.outputs.result }}
@@ -32,28 +35,31 @@ runs:
     - uses: actions/github-script@v6
       id: payload
       env:
-        header: |-
+        bodyHeader: |-
           @${{ github.actor }} check the ${{ github.event.workflow_run.conclusion }}
-        details: |-
+        bodyMessage: |-
           ${{ steps.summary.outputs.annotation-failure-messages }}
         contextBranch: |-
           ${{ github.repository }}/*${{ github.event.workflow_run.head_branch }}*
+        contextPullRequest: |-
+          <${{ steps.summary.outputs.pull-request-url }}|#${{ steps.summary.outputs.pull-request-number }}>
         contextWorkflow: |-
           workflow: <${{ github.event.workflow_run.html_url }}|${{ github.event.workflow_run.name }}>
       with:
         # preview on https://app.slack.com/block-kit-builder
         script: |
-          const payloadLines = [process.env.header]
-          if (process.env.details) {
-            payloadLines.push('```', process.env.details, '```')
-          }
           return {
             blocks: [
               {
                 type: "section",
                 text: {
                   type: "mrkdwn",
-                  text: payloadLines.join('\n')
+                  text: (() => {
+                    if (process.env.bodyMessage) {
+                      return [process.env.bodyHeader, '```', process.env.bodyMessage, '```'].join('\n')
+                    }
+                    return process.env.bodyHeader
+                  })()
                 }
               },
               {
@@ -62,6 +68,10 @@ runs:
                   {
                     "type": "mrkdwn",
                     "text": process.env.contextBranch
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": process.env.contextPullRequest
                   },
                   {
                     "type": "mrkdwn",

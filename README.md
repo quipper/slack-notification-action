@@ -10,10 +10,19 @@ This is an action to notify a status of GitHub Actions to a Slack channel.
 {
 	"blocks": [
 		{
+			"type": "context",
+			"elements": [
+				{
+					"type": "mrkdwn",
+					"text": "Check the workflow failure of <https://github.com/octocat/example|backend / test>"
+				}
+			]
+		},
+		{
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": "@octocat check the failure\n```\nProcess completed with exit code 1.\n```"
+				"text": "```\nProcess completed with exit code 1.\n```"
 			}
 		},
 		{
@@ -29,7 +38,7 @@ This is an action to notify a status of GitHub Actions to a Slack channel.
 				},
 				{
 					"type": "mrkdwn",
-					"text": "workflow: <https://github.com|api / test>"
+					"text": "@octocat"
 				}
 			]
 		}

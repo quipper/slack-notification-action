@@ -10,7 +10,8 @@ inputs:
   context-mention:
     description: Mention in the message
     required: true
-    default: @${{ github.actor }}
+    default: |-
+      @${{ github.actor }}
   slack-channel-id:
     description: ID of the Slack channel
     required: true

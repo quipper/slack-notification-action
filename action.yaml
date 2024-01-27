@@ -2,6 +2,16 @@ name: slack-notification-action
 description: notify the current workflow run to a Slack channel
 
 inputs:
+  context-header:
+    description: Header of the message
+    required: true
+    default: |-
+      Check the workflow ${{ github.event.workflow_run.conclusion }} of <${{ github.event.workflow_run.html_url }}|${{ github.event.workflow_run.name }}>
+  context-mention:
+    description: Mention in the message
+    required: true
+    default: |-
+      @${{ github.actor }}
   slack-channel-id:
     description: ID of the Slack channel
     required: true
@@ -35,52 +45,55 @@ runs:
     - uses: actions/github-script@v6
       id: payload
       env:
-        bodyHeader: |-
-          @${{ github.actor }} check the ${{ github.event.workflow_run.conclusion }}
-        bodyMessage: |-
+        contextHeader: ${{ inputs.context-header }}
+        contextMention: ${{ inputs.context-mention }}
+        failureMessage: |-
           ${{ steps.summary.outputs.annotation-failure-messages }}
         contextBranch: |-
           ${{ github.repository }}/*${{ github.event.workflow_run.head_branch }}*
         contextPullRequest: |-
           <${{ steps.summary.outputs.pull-request-url }}|#${{ steps.summary.outputs.pull-request-number }}>
-        contextWorkflow: |-
-          workflow: <${{ github.event.workflow_run.html_url }}|${{ github.event.workflow_run.name }}>
       with:
         # preview on https://app.slack.com/block-kit-builder
         script: |
-          return {
-            blocks: [
+          const blocks = [
+            {
+              "type": "context",
+              "elements": [
+                {
+                  "type": "mrkdwn",
+                  "text": process.env.contextHeader
+                },
+              ],
+            },
+          ]
+          if (process.env.failureMessage) {
+            blocks.push({
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": ['```', process.env.failureMessage, '```'].join('\n')
+              }
+            })
+          }
+          blocks.push({
+            "type": "context",
+            "elements": [
               {
-                type: "section",
-                text: {
-                  type: "mrkdwn",
-                  text: (() => {
-                    if (process.env.bodyMessage) {
-                      return [process.env.bodyHeader, '```', process.env.bodyMessage, '```'].join('\n')
-                    }
-                    return process.env.bodyHeader
-                  })()
-                }
+                "type": "mrkdwn",
+                "text": process.env.contextBranch
               },
               {
-                "type": "context",
-                "elements": [
-                  {
-                    "type": "mrkdwn",
-                    "text": process.env.contextBranch
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": process.env.contextPullRequest
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": process.env.contextWorkflow
-                  }
-                ]
-              }
-            ]
-          }
+                "type": "mrkdwn",
+                "text": process.env.contextPullRequest
+              },
+              {
+                "type": "mrkdwn",
+                "text": process.env.contextMention
+              },
+            ],
+          })
+          return { blocks }
 
     # Don't notify if conclusion is cancelled or skipped.
     # Skip if Slack App token is not set such as test workflow.

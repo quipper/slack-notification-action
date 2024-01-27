@@ -4,16 +4,25 @@ This is an action to notify a status of GitHub Actions to a Slack channel.
 
 ## Example
 
-<img width="443" alt="image" src="https://github.com/quipper/slack-notification-action/assets/321266/9a5eb834-db70-4091-ac04-414163022bb7">
+<img width="450" alt="image" src="https://github.com/quipper/slack-notification-action/assets/321266/7604b25a-9aae-40c3-aef6-354b4657ec5a">
 
 <!--
 {
 	"blocks": [
 		{
+			"type": "context",
+			"elements": [
+				{
+					"type": "mrkdwn",
+					"text": "Check the workflow failure of <https://github.com/octocat/example|backend / test>"
+				}
+			]
+		},
+		{
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": "@octocat check the failure\n```\nProcess completed with exit code 1.\n```"
+				"text": "```\nProcess completed with exit code 1.\n```"
 			}
 		},
 		{
@@ -29,7 +38,7 @@ This is an action to notify a status of GitHub Actions to a Slack channel.
 				},
 				{
 					"type": "mrkdwn",
-					"text": "workflow: <https://github.com|api / test>"
+					"text": "@octocat"
 				}
 			]
 		}

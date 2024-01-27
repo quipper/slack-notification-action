@@ -4,7 +4,7 @@ This is an action to notify a status of GitHub Actions to a Slack channel.
 
 ## Example
 
-<img width="443" alt="image" src="https://github.com/quipper/slack-notification-action/assets/321266/9a5eb834-db70-4091-ac04-414163022bb7">
+<img width="450" alt="image" src="https://github.com/quipper/slack-notification-action/assets/321266/7604b25a-9aae-40c3-aef6-354b4657ec5a">
 
 <!--
 {

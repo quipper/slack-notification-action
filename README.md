@@ -56,7 +56,7 @@ name: slack-notification
 on:
   workflow_run:
     workflows:
-      - '**'
+      - "**"
       # you can exclude some workflows, like:
       # - '!*-metrics'
     branches:
@@ -87,15 +87,15 @@ For a large repository, it is recommended to create a personal access token or G
 
 ### Inputs
 
-| Name | Default | Description
-|------|----------|------------
-| `slack-channel-id` | (required) | ID of the Slack channel
-| `slack-app-token` | (required) | Slack App Bot Token
-| `github-token` | `github.token` | GitHub token
+| Name               | Default        | Description             |
+| ------------------ | -------------- | ----------------------- |
+| `slack-channel-id` | (required)     | ID of the Slack channel |
+| `slack-app-token`  | (required)     | Slack App Bot Token     |
+| `github-token`     | `github.token` | GitHub token            |
 
 ### Outputs
 
-| Name | Description
-|------|------------
-| `annotation-failure-messages` | Annotation messages of failure in the workflow run
-| `payload` | JSON payload
+| Name                          | Description                                        |
+| ----------------------------- | -------------------------------------------------- |
+| `annotation-failure-messages` | Annotation messages of failure in the workflow run |
+| `payload`                     | JSON payload                                       |

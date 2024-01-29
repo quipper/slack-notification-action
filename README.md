@@ -7,16 +7,15 @@ This is an action to notify a status of GitHub Actions to a Slack channel.
 <img width="450" alt="image" src="https://github.com/quipper/slack-notification-action/assets/321266/7604b25a-9aae-40c3-aef6-354b4657ec5a">
 
 <!--
+# preview on https://app.slack.com/block-kit-builder
 {
 	"blocks": [
 		{
-			"type": "context",
-			"elements": [
-				{
-					"type": "mrkdwn",
-					"text": "Check the workflow failure of <https://github.com/octocat/example|backend / test>"
-				}
-			]
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "Check the failure of workflow *<https://github.com/octocat/example|backend / test>*"
+			}
 		},
 		{
 			"type": "section",

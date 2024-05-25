@@ -2,6 +2,8 @@ name: test
 
 on:
   pull_request:
+    branches:
+      - v1
     paths:
       - action.yaml
       - .github/workflows/test.yaml

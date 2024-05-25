@@ -1,10 +1,17 @@
-name: typescript-action
-description: Template of TypeScript Action
+name: slack-notification-action
+description: Notify the current workflow run to a Slack channel
 
 inputs:
-  name:
-    description: example input
+  slack-channel-id:
+    description: ID of the Slack channel
     required: true
+  slack-app-token:
+    description: Bot token of Slack App
+    required: true
+  github-token:
+    description: GitHub token (optional)
+    required: true
+    default: ${{ github.token }}
 
 runs:
   using: 'node20'

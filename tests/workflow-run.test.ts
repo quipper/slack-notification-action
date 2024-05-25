@@ -7,31 +7,33 @@ describe('getWorkflowRunSummary', () => {
     // {"id": "CS_kwDOGSet3s8AAAADg4c9nQ"}
     const outputs = getWorkflowRunSummary({
       node: {
-        __typename: 'CheckSuite',
-        checkRuns: {
-          nodes: [
-            {
-              conclusion: CheckConclusionState.Success,
-              annotations: {
-                nodes: [
-                  {
-                    message: 'this is an example',
-                    annotationLevel: CheckAnnotationLevel.Failure,
-                  },
-                ],
-              },
-            },
-          ],
-        },
-        commit: {
-          associatedPullRequests: {
-            totalCount: 1,
+        __typename: 'WorkflowRun',
+        checkSuite: {
+          checkRuns: {
             nodes: [
               {
-                number: 484,
-                url: 'https://github.com/int128/workflow-run-summary-action/pull/484',
+                conclusion: CheckConclusionState.Success,
+                annotations: {
+                  nodes: [
+                    {
+                      message: 'this is an example',
+                      annotationLevel: CheckAnnotationLevel.Failure,
+                    },
+                  ],
+                },
               },
             ],
+          },
+          commit: {
+            associatedPullRequests: {
+              totalCount: 1,
+              nodes: [
+                {
+                  number: 484,
+                  url: 'https://github.com/int128/workflow-run-summary-action/pull/484',
+                },
+              ],
+            },
           },
         },
       },
@@ -53,21 +55,23 @@ describe('getWorkflowRunSummary', () => {
     // {"id": "CS_kwDOBCmOrs8AAAADg69rsw"}
     const outputs = getWorkflowRunSummary({
       node: {
-        __typename: 'CheckSuite',
-        checkRuns: {
-          nodes: [
-            {
-              conclusion: CheckConclusionState.Success,
-              annotations: {
-                nodes: [],
+        __typename: 'WorkflowRun',
+        checkSuite: {
+          checkRuns: {
+            nodes: [
+              {
+                conclusion: CheckConclusionState.Success,
+                annotations: {
+                  nodes: [],
+                },
               },
+            ],
+          },
+          commit: {
+            associatedPullRequests: {
+              totalCount: 0,
+              nodes: [],
             },
-          ],
-        },
-        commit: {
-          associatedPullRequests: {
-            totalCount: 0,
-            nodes: [],
           },
         },
       },

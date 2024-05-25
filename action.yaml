@@ -1,107 +1,18 @@
 name: slack-notification-action
-description: notify the current workflow run to a Slack channel
+description: Notify the current workflow run to a Slack channel
 
 inputs:
-  context-header:
-    description: Header of the message
-    required: true
-    default: |-
-      Check the ${{ github.event.workflow_run.conclusion }} of workflow *<${{ github.event.workflow_run.html_url }}|${{ github.event.workflow_run.name }}>*
-  context-mention:
-    description: Mention in the message
-    required: true
-    default: |-
-      @${{ github.actor }}
   slack-channel-id:
     description: ID of the Slack channel
     required: true
   slack-app-token:
-    description: Slack App Bot Token
+    description: Bot token of Slack App
     required: true
   github-token:
     description: GitHub token (optional)
     required: true
     default: ${{ github.token }}
 
-outputs:
-  annotation-failure-messages:
-    description: annotation messages of failure in the workflow run
-    value: ${{ steps.summary.outputs.annotation-failure-messages }}
-  pull-request-number:
-    description: associated pull request number, if exists
-    value: ${{ steps.summary.outputs.pull-request-number }}
-  payload:
-    description: JSON payload
-    value: ${{ steps.payload.outputs.result }}
-
 runs:
-  using: composite
-  steps:
-    - uses: int128/workflow-run-summary-action@v1
-      id: summary
-      with:
-        token: ${{ inputs.github-token }}
-
-    - uses: actions/github-script@v6
-      id: payload
-      env:
-        contextHeader: ${{ inputs.context-header }}
-        contextMention: ${{ inputs.context-mention }}
-        failureMessage: |-
-          ${{ steps.summary.outputs.annotation-failure-messages }}
-        contextBranch: |-
-          ${{ github.repository }}/*${{ github.event.workflow_run.head_branch }}*
-        contextPullRequest: |-
-          <${{ steps.summary.outputs.pull-request-url }}|#${{ steps.summary.outputs.pull-request-number }}>
-      with:
-        # preview on https://app.slack.com/block-kit-builder
-        script: |
-          const blocks = [
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": process.env.contextHeader
-              },
-            },
-          ]
-          if (process.env.failureMessage) {
-            blocks.push({
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": ['```', process.env.failureMessage, '```'].join('\n')
-              }
-            })
-          }
-          blocks.push({
-            "type": "context",
-            "elements": [
-              {
-                "type": "mrkdwn",
-                "text": process.env.contextBranch
-              },
-              {
-                "type": "mrkdwn",
-                "text": process.env.contextPullRequest
-              },
-              {
-                "type": "mrkdwn",
-                "text": process.env.contextMention
-              },
-            ],
-          })
-          return { blocks }
-
-    # Don't notify if conclusion is cancelled or skipped.
-    # Skip if Slack App token is not set such as test workflow.
-    - if: |
-        steps.summary.outputs.cancelled != 'true' &&
-        steps.summary.outputs.skipped != 'true' &&
-        inputs.slack-app-token
-      uses: slackapi/slack-github-action@v1
-      with:
-        channel-id: ${{ inputs.slack-channel-id }}
-        payload: ${{ steps.payload.outputs.result }}
-      env:
-        SLACK_BOT_TOKEN: ${{ inputs.slack-app-token }}
+  using: 'node20'
+  main: 'dist/index.js'

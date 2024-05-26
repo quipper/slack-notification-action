@@ -7,7 +7,7 @@ export type WorkflowRunSummary = {
   workflowRunUrl: string
   conclusion: CheckConclusionState | null | undefined
   branch: string | undefined
-  annotationFailureMessages: string
+  failureAnnotationMessages: string[]
   cancelled: boolean
   skipped: boolean
   associatedPullRequest: AssociatedPullRequest | undefined
@@ -23,7 +23,7 @@ export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery): Workflo
   assert(workflowRun.node.__typename === 'WorkflowRun')
   const checkSuite = workflowRun.node.checkSuite
 
-  const annotationFailureMessages = new Set<string>()
+  const failureAnnotationMessages = new Set<string>()
   const conclusions = new Array<CheckConclusionState>()
   for (const checkRun of checkSuite.checkRuns?.nodes ?? []) {
     if (checkRun == null) {
@@ -35,7 +35,7 @@ export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery): Workflo
     for (const annotation of checkRun.annotations?.nodes ?? []) {
       if (annotation?.message) {
         if (annotation.annotationLevel === CheckAnnotationLevel.Failure) {
-          annotationFailureMessages.add(annotation.message)
+          failureAnnotationMessages.add(annotation.message)
         }
       }
     }
@@ -58,7 +58,7 @@ export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery): Workflo
     workflowRunUrl: workflowRun.node.url,
     conclusion: checkSuite.conclusion,
     branch: checkSuite.branch?.name,
-    annotationFailureMessages: [...annotationFailureMessages].join('\n'),
+    failureAnnotationMessages: [...failureAnnotationMessages],
     cancelled: conclusions.some((c) => c === CheckConclusionState.Cancelled),
     skipped: conclusions.every((c) => c === CheckConclusionState.Skipped),
     associatedPullRequest,

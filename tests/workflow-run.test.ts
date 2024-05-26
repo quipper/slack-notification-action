@@ -53,7 +53,7 @@ describe('getWorkflowRunSummary', () => {
       branch: 'main',
       cancelled: false,
       skipped: false,
-      annotationFailureMessages: 'this is an example',
+      failureAnnotationMessages: ['this is an example'],
       associatedPullRequest: {
         number: 484,
         url: 'https://github.com/int128/workflow-run-summary-action/pull/484',
@@ -98,7 +98,7 @@ describe('getWorkflowRunSummary', () => {
       branch: undefined,
       cancelled: false,
       skipped: false,
-      annotationFailureMessages: '',
+      failureAnnotationMessages: [],
       associatedPullRequest: undefined,
     })
   })

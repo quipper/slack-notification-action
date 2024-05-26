@@ -49,8 +49,8 @@ describe('getWorkflowRunSummary', () => {
     expect(outputs).toStrictEqual<WorkflowRunSummary>({
       workflowName: 'test',
       workflowRunUrl: 'https://github.com/int128/workflow-run-summary-action/actions/runs/5861542956',
-      conclusion: CheckConclusionState.Failure,
       branch: 'main',
+      conclusion: CheckConclusionState.Failure,
       cancelled: false,
       skipped: false,
       failureAnnotationMessages: ['this is an example'],
@@ -94,8 +94,8 @@ describe('getWorkflowRunSummary', () => {
     expect(outputs).toStrictEqual<WorkflowRunSummary>({
       workflowName: 'test',
       workflowRunUrl: 'https://github.com/int128/workflow-run-summary-action/actions/runs/5861542956',
-      conclusion: undefined,
       branch: undefined,
+      conclusion: undefined,
       cancelled: false,
       skipped: false,
       failureAnnotationMessages: [],

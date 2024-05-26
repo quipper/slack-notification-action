@@ -8,7 +8,14 @@ const query = /* GraphQL */ `
     node(id: $id) {
       __typename
       ... on WorkflowRun {
+        url
+        workflow {
+          name
+        }
         checkSuite {
+          branch {
+            name
+          }
           checkRuns(first: 100) {
             nodes {
               conclusion

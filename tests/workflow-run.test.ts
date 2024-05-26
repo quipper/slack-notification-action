@@ -1,5 +1,5 @@
 import { CheckAnnotationLevel, CheckConclusionState } from '../src/generated/graphql-types.js'
-import { getWorkflowRunSummary } from '../src/workflow-run.js'
+import { getWorkflowRunSummary, WorkflowRunSummary } from '../src/workflow-run.js'
 
 describe('getWorkflowRunSummary', () => {
   test('full fields', () => {
@@ -8,7 +8,14 @@ describe('getWorkflowRunSummary', () => {
     const outputs = getWorkflowRunSummary({
       node: {
         __typename: 'WorkflowRun',
+        url: 'https://github.com/int128/workflow-run-summary-action/actions/runs/5861542956',
+        workflow: {
+          name: 'test',
+        },
         checkSuite: {
+          branch: {
+            name: 'main',
+          },
           checkRuns: {
             nodes: [
               {
@@ -38,10 +45,12 @@ describe('getWorkflowRunSummary', () => {
         },
       },
     })
-    expect(outputs).toStrictEqual({
+    expect(outputs).toStrictEqual<WorkflowRunSummary>({
+      workflowName: 'test',
+      workflowRunUrl: 'https://github.com/int128/workflow-run-summary-action/actions/runs/5861542956',
+      branch: 'main',
       cancelled: false,
       skipped: false,
-      annotationMessages: 'this is an example',
       annotationFailureMessages: 'this is an example',
       associatedPullRequest: {
         number: 484,
@@ -56,6 +65,10 @@ describe('getWorkflowRunSummary', () => {
     const outputs = getWorkflowRunSummary({
       node: {
         __typename: 'WorkflowRun',
+        url: 'https://github.com/int128/workflow-run-summary-action/actions/runs/5861542956',
+        workflow: {
+          name: 'test',
+        },
         checkSuite: {
           checkRuns: {
             nodes: [
@@ -76,10 +89,12 @@ describe('getWorkflowRunSummary', () => {
         },
       },
     })
-    expect(outputs).toStrictEqual({
+    expect(outputs).toStrictEqual<WorkflowRunSummary>({
+      workflowName: 'test',
+      workflowRunUrl: 'https://github.com/int128/workflow-run-summary-action/actions/runs/5861542956',
+      branch: undefined,
       cancelled: false,
       skipped: false,
-      annotationMessages: '',
       annotationFailureMessages: '',
       associatedPullRequest: undefined,
     })

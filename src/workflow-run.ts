@@ -2,12 +2,26 @@ import assert from 'assert'
 import { GetWorkflowRunQuery } from './generated/graphql.js'
 import { CheckAnnotationLevel, CheckConclusionState } from './generated/graphql-types.js'
 
-export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery) => {
+export type WorkflowRunSummary = {
+  workflowName: string
+  workflowRunUrl: string
+  branch: string | undefined
+  annotationFailureMessages: string
+  cancelled: boolean
+  skipped: boolean
+  associatedPullRequest: AssociatedPullRequest | undefined
+}
+
+type AssociatedPullRequest = {
+  number: number
+  url: string
+}
+
+export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery): WorkflowRunSummary => {
   assert(workflowRun.node != null)
   assert(workflowRun.node.__typename === 'WorkflowRun')
   const checkSuite = workflowRun.node.checkSuite
 
-  const annotationMessages = new Set<string>()
   const annotationFailureMessages = new Set<string>()
   const conclusions = new Array<CheckConclusionState>()
   for (const checkRun of checkSuite.checkRuns?.nodes ?? []) {
@@ -19,7 +33,6 @@ export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery) => {
     }
     for (const annotation of checkRun.annotations?.nodes ?? []) {
       if (annotation?.message) {
-        annotationMessages.add(annotation.message)
         if (annotation.annotationLevel === CheckAnnotationLevel.Failure) {
           annotationFailureMessages.add(annotation.message)
         }
@@ -40,7 +53,9 @@ export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery) => {
   }
 
   return {
-    annotationMessages: [...annotationMessages].join('\n'),
+    workflowName: workflowRun.node.workflow.name,
+    workflowRunUrl: workflowRun.node.url,
+    branch: checkSuite.branch?.name,
     annotationFailureMessages: [...annotationFailureMessages].join('\n'),
     cancelled: conclusions.some((c) => c === CheckConclusionState.Cancelled),
     skipped: conclusions.every((c) => c === CheckConclusionState.Skipped),

@@ -13,6 +13,7 @@ const query = /* GraphQL */ `
           name
         }
         checkSuite {
+          conclusion
           branch {
             name
           }

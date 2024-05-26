@@ -5,6 +5,7 @@ import { CheckAnnotationLevel, CheckConclusionState } from './generated/graphql-
 export type WorkflowRunSummary = {
   workflowName: string
   workflowRunUrl: string
+  conclusion: CheckConclusionState | null | undefined
   branch: string | undefined
   annotationFailureMessages: string
   cancelled: boolean
@@ -55,6 +56,7 @@ export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery): Workflo
   return {
     workflowName: workflowRun.node.workflow.name,
     workflowRunUrl: workflowRun.node.url,
+    conclusion: checkSuite.conclusion,
     branch: checkSuite.branch?.name,
     annotationFailureMessages: [...annotationFailureMessages].join('\n'),
     cancelled: conclusions.some((c) => c === CheckConclusionState.Cancelled),

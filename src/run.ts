@@ -19,6 +19,15 @@ export const run = async (inputs: Inputs): Promise<void> => {
   const workflowRun = await getWorkflowRunForEvent(octokit)
 
   const summary = getWorkflowRunSummary(workflowRun)
+  if (summary.cancelled) {
+    core.info('This workflow run is cancelled. Do nothing.')
+    return
+  }
+  if (summary.skipped) {
+    core.info('This workflow run is skipped. Do nothing.')
+    return
+  }
+
   const blocks = getSlackBlocks(summary, {
     repository: github.context.repo.repo,
     actor: github.context.actor,
@@ -26,7 +35,7 @@ export const run = async (inputs: Inputs): Promise<void> => {
   core.info(`Sending blocks: ${JSON.stringify(blocks, undefined, 2)}`)
 
   if (inputs.slackToken === '') {
-    core.warning('slack-token is not set. Skip sending the message to Slack')
+    core.warning('slack-token is not set. Skip sending the message to Slack.')
     return
   }
   const slackClient = new slack.WebClient(inputs.slackToken)

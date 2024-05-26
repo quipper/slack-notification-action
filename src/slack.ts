@@ -12,7 +12,7 @@ export const getSlackBlocks = (w: WorkflowRunSummary, c: Context): KnownBlock[] 
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `Workflow ${w.conclusion?.toLocaleLowerCase()} <${w.workflowRunUrl}|${w.workflowName}>`,
+        text: `Workflow ${w.conclusion?.toLocaleLowerCase() ?? ''} <${w.workflowRunUrl}|${w.workflowName}>`,
       },
     },
   ]

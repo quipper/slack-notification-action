@@ -55,7 +55,7 @@ name: slack-notification
 on:
   workflow_run:
     workflows:
-      - "**"
+      - '**'
       # you can exclude some workflows, like:
       # - '!*-metrics'
     branches:
@@ -69,7 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: quipper/slack-notification-action@v1
+      - uses: quipper/slack-notification-action@v2
         with:
           slack-channel-id: ABCDEF123 # your Slack channel ID
           slack-app-token: ${{ secrets.SLACK_APP_TOKEN }}
@@ -89,12 +89,9 @@ For a large repository, it is recommended to create a personal access token or G
 | Name               | Default        | Description             |
 | ------------------ | -------------- | ----------------------- |
 | `slack-channel-id` | (required)     | ID of the Slack channel |
-| `slack-app-token`  | (required)     | Slack App Bot Token     |
+| `slack-app-token`  | (dry-run)      | Bot token of Slack App  |
 | `github-token`     | `github.token` | GitHub token            |
 
 ### Outputs
 
-| Name                          | Description                                        |
-| ----------------------------- | -------------------------------------------------- |
-| `annotation-failure-messages` | Annotation messages of failure in the workflow run |
-| `payload`                     | JSON payload                                       |
+None.

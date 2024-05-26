@@ -5,11 +5,11 @@ import { CheckAnnotationLevel, CheckConclusionState } from './generated/graphql-
 export type WorkflowRunSummary = {
   workflowName: string
   workflowRunUrl: string
-  conclusion: CheckConclusionState | null | undefined
   branch: string | undefined
-  failureAnnotationMessages: string[]
+  conclusion: CheckConclusionState | null | undefined
   cancelled: boolean
   skipped: boolean
+  failureAnnotationMessages: string[]
   associatedPullRequest: AssociatedPullRequest | undefined
 }
 
@@ -23,44 +23,47 @@ export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery): Workflo
   assert(workflowRun.node.__typename === 'WorkflowRun')
   const checkSuite = workflowRun.node.checkSuite
 
-  const failureAnnotationMessages = new Set<string>()
-  const conclusions = new Array<CheckConclusionState>()
+  const conclusions: CheckConclusionState[] = []
   for (const checkRun of checkSuite.checkRuns?.nodes ?? []) {
-    if (checkRun == null) {
-      continue
-    }
-    if (checkRun.conclusion) {
+    if (checkRun?.conclusion) {
       conclusions.push(checkRun.conclusion)
-    }
-    for (const annotation of checkRun.annotations?.nodes ?? []) {
-      if (annotation?.message) {
-        if (annotation.annotationLevel === CheckAnnotationLevel.Failure) {
-          failureAnnotationMessages.add(annotation.message)
-        }
-      }
     }
   }
 
-  let associatedPullRequest
-  assert(checkSuite.commit.associatedPullRequests != null)
-  assert(checkSuite.commit.associatedPullRequests.nodes != null)
-  if (checkSuite.commit.associatedPullRequests.nodes.length > 0) {
-    const pull = checkSuite.commit.associatedPullRequests.nodes[0]
-    assert(pull != null)
-    associatedPullRequest = {
-      number: pull.number,
-      url: pull.url,
+  const failureAnnotationMessages = new Set<string>()
+  for (const checkRun of checkSuite.checkRuns?.nodes ?? []) {
+    for (const annotation of checkRun?.annotations?.nodes ?? []) {
+      if (annotation?.message && annotation.annotationLevel === CheckAnnotationLevel.Failure) {
+        failureAnnotationMessages.add(annotation.message)
+      }
     }
   }
 
   return {
     workflowName: workflowRun.node.workflow.name,
     workflowRunUrl: workflowRun.node.url,
-    conclusion: checkSuite.conclusion,
     branch: checkSuite.branch?.name,
-    failureAnnotationMessages: [...failureAnnotationMessages],
+    conclusion: checkSuite.conclusion,
     cancelled: conclusions.some((c) => c === CheckConclusionState.Cancelled),
     skipped: conclusions.every((c) => c === CheckConclusionState.Skipped),
-    associatedPullRequest,
+    failureAnnotationMessages: [...failureAnnotationMessages],
+    associatedPullRequest: getAssociatedPullRequest(workflowRun),
+  }
+}
+
+const getAssociatedPullRequest = (workflowRun: GetWorkflowRunQuery): AssociatedPullRequest | undefined => {
+  assert(workflowRun.node != null)
+  assert(workflowRun.node.__typename === 'WorkflowRun')
+  const associatedPullRequests = workflowRun.node.checkSuite.commit.associatedPullRequests
+  assert(associatedPullRequests != null)
+  assert(associatedPullRequests.nodes != null)
+  if (associatedPullRequests.nodes.length === 0) {
+    return
+  }
+  const pull = associatedPullRequests.nodes[0]
+  assert(pull != null)
+  return {
+    number: pull.number,
+    url: pull.url,
   }
 }

@@ -9,8 +9,13 @@ export type WorkflowRunSummary = {
   conclusion: CheckConclusionState | null | undefined
   cancelled: boolean
   skipped: boolean
-  failureAnnotationMessages: string[]
+  failedJobs: FailedJob[]
   associatedPullRequest: AssociatedPullRequest | undefined
+}
+
+type FailedJob = {
+  name: string
+  failureAnnotationMessages: string[]
 }
 
 type AssociatedPullRequest = {
@@ -30,13 +35,19 @@ export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery): Workflo
     }
   }
 
-  const failureAnnotationMessages = new Set<string>()
-  for (const checkRun of checkSuite.checkRuns?.nodes ?? []) {
-    for (const annotation of checkRun?.annotations?.nodes ?? []) {
+  const failedJobs: FailedJob[] = []
+  for (const checkRun of checkSuite.failedCheckRuns?.nodes ?? []) {
+    assert(checkRun != null)
+    const failureAnnotationMessages = new Set<string>()
+    for (const annotation of checkRun.annotations?.nodes ?? []) {
       if (annotation?.message && annotation.annotationLevel === CheckAnnotationLevel.Failure) {
         failureAnnotationMessages.add(annotation.message)
       }
     }
+    failedJobs.push({
+      name: checkRun.name,
+      failureAnnotationMessages: [...failureAnnotationMessages],
+    })
   }
 
   return {
@@ -46,7 +57,7 @@ export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery): Workflo
     conclusion: checkSuite.conclusion,
     cancelled: conclusions.some((c) => c === CheckConclusionState.Cancelled),
     skipped: conclusions.every((c) => c === CheckConclusionState.Skipped),
-    failureAnnotationMessages: [...failureAnnotationMessages],
+    failedJobs,
     associatedPullRequest: getAssociatedPullRequest(workflowRun),
   }
 }

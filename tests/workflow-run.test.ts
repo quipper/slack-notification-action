@@ -21,6 +21,13 @@ describe('getWorkflowRunSummary', () => {
             nodes: [
               {
                 conclusion: CheckConclusionState.Success,
+              },
+            ],
+          },
+          failedCheckRuns: {
+            nodes: [
+              {
+                name: 'jest',
                 annotations: {
                   nodes: [
                     {
@@ -53,7 +60,12 @@ describe('getWorkflowRunSummary', () => {
       conclusion: CheckConclusionState.Failure,
       cancelled: false,
       skipped: false,
-      failureAnnotationMessages: ['this is an example'],
+      failedJobs: [
+        {
+          name: 'jest',
+          failureAnnotationMessages: ['this is an example'],
+        },
+      ],
       associatedPullRequest: {
         number: 484,
         url: 'https://github.com/int128/workflow-run-summary-action/pull/484',
@@ -61,7 +73,7 @@ describe('getWorkflowRunSummary', () => {
     })
   })
 
-  test('no annotations or associated pulls', () => {
+  test('no failed jobs or associated pulls', () => {
     // https://github.com/int128/sandbox/actions/runs/5862603103/job/15894663930
     // {"id": "CS_kwDOBCmOrs8AAAADg69rsw"}
     const outputs = getWorkflowRunSummary({
@@ -76,11 +88,11 @@ describe('getWorkflowRunSummary', () => {
             nodes: [
               {
                 conclusion: CheckConclusionState.Success,
-                annotations: {
-                  nodes: [],
-                },
               },
             ],
+          },
+          failedCheckRuns: {
+            nodes: [],
           },
           commit: {
             associatedPullRequests: {
@@ -98,7 +110,7 @@ describe('getWorkflowRunSummary', () => {
       conclusion: undefined,
       cancelled: false,
       skipped: false,
-      failureAnnotationMessages: [],
+      failedJobs: [],
       associatedPullRequest: undefined,
     })
   })

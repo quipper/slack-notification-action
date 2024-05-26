@@ -17,9 +17,14 @@ const query = /* GraphQL */ `
           branch {
             name
           }
-          checkRuns(first: 100) {
+          checkRuns(first: 100, filterBy: { checkType: LATEST }) {
             nodes {
               conclusion
+            }
+          }
+          failedCheckRuns: checkRuns(first: 10, filterBy: { checkType: LATEST, conclusions: FAILURE }) {
+            nodes {
+              name
               annotations(first: 10) {
                 nodes {
                   message

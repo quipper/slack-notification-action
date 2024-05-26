@@ -17,13 +17,19 @@ export const getSlackBlocks = (w: WorkflowRunSummary, c: Context): KnownBlock[] 
     },
   ]
 
-  if (w.failureAnnotationMessages.length > 0) {
+  for (const failedJob of w.failedJobs) {
+    const lines = [`Job: ${failedJob.name}`]
+    if (failedJob.failureAnnotationMessages.length > 0) {
+      lines.push('```', ...failedJob.failureAnnotationMessages, '```')
+    }
     blocks.push({
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: ['```', `${w.failureAnnotationMessages.join('\n')}`, '```'].join('\n'),
-      },
+      type: 'context',
+      elements: [
+        {
+          type: 'mrkdwn',
+          text: lines.join('\n'),
+        },
+      ],
     })
   }
 

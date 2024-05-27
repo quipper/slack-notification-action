@@ -10,7 +10,7 @@ type Octokit = ReturnType<typeof github.getOctokit>
 
 type Inputs = {
   slackChannelId: string
-  slackToken: string
+  slackAppToken: string
   githubToken: string
 }
 
@@ -34,11 +34,11 @@ export const run = async (inputs: Inputs): Promise<void> => {
   })
   core.info(`Sending blocks: ${JSON.stringify(blocks, undefined, 2)}`)
 
-  if (inputs.slackToken === '') {
-    core.warning('slack-token is not set. Skip sending the message to Slack.')
+  if (inputs.slackAppToken === '') {
+    core.warning('slack-app-token is not set. Skip sending the message to Slack.')
     return
   }
-  const slackClient = new slack.WebClient(inputs.slackToken)
+  const slackClient = new slack.WebClient(inputs.slackAppToken)
   await slackClient.chat.postMessage({
     channel: inputs.slackChannelId,
     blocks,

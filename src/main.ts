@@ -4,7 +4,7 @@ import { run } from './run.js'
 const main = async (): Promise<void> => {
   await run({
     slackChannelId: core.getInput('slack-channel-id', { required: true }),
-    slackToken: core.getInput('slack-token'),
+    slackToken: core.getInput('slack-app-token'),
     githubToken: core.getInput('github-token', { required: true }),
   })
 }

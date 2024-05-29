@@ -1,4 +1,4 @@
-# slack-notification-action [![test](https://github.com/quipper/slack-notification-action/actions/workflows/test.yaml/badge.svg)](https://github.com/quipper/slack-notification-action/actions/workflows/test.yaml)
+# slack-notification-action [![ts](https://github.com/quipper/slack-notification-action/actions/workflows/ts.yaml/badge.svg)](https://github.com/quipper/slack-notification-action/actions/workflows/ts.yaml)
 
 This is an action to notify a status of GitHub Actions to a Slack channel.
 
@@ -82,7 +82,8 @@ See https://github.com/slackapi/slack-github-action for details.
 
 This action ignores an event if the conclusion is cancelled or skipped.
 
-For a large repository, it is recommended to create a personal access token or GitHub App token to mitigate the rate limit of `GITHUB_TOKEN`.
+When this action is run on `workflow_run` event, it inspects the target workflow run.
+Otherwise, it inspects the current workflow run.
 
 ### Inputs
 

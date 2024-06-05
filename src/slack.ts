@@ -12,13 +12,13 @@ export const getSlackBlocks = (w: WorkflowRunSummary, c: Context): KnownBlock[] 
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `Workflow **<${w.workflowRunUrl}|${w.workflowName}>** ${w.conclusion?.toLocaleLowerCase() ?? ''}`,
+        text: `Workflow *<${w.workflowRunUrl}|${w.workflowName}>* ${w.conclusion?.toLocaleLowerCase() ?? ''}`,
       },
     },
   ]
 
   for (const failedJob of w.failedJobs) {
-    const lines = [`Job **${failedJob.name}**`]
+    const lines = [`Job *${failedJob.name}*`]
     if (failedJob.failureAnnotationMessages.length > 0) {
       lines.push('```', ...failedJob.failureAnnotationMessages, '```')
     }
@@ -48,7 +48,7 @@ export const getSlackBlocks = (w: WorkflowRunSummary, c: Context): KnownBlock[] 
   }
   contextBlock.elements.push({
     type: 'mrkdwn',
-    text: `:bust_in_silhouette: @${c.actor}`,
+    text: `@${c.actor}`,
   })
   blocks.push(contextBlock)
   return blocks

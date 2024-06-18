@@ -3,7 +3,7 @@ import { WorkflowRunSummary } from './workflow-run.js'
 
 type Context = {
   repository: string
-  actor: string
+  mention: string | null
 }
 
 export const getSlackBlocks = (w: WorkflowRunSummary, c: Context): KnownBlock[] => {
@@ -46,10 +46,12 @@ export const getSlackBlocks = (w: WorkflowRunSummary, c: Context): KnownBlock[] 
       text: `:pr_merged: <${w.associatedPullRequest.url}|#${w.associatedPullRequest.number}>`,
     })
   }
-  contextBlock.elements.push({
-    type: 'mrkdwn',
-    text: `@${c.actor}`,
-  })
+  if (c.mention) {
+    contextBlock.elements.push({
+      type: 'mrkdwn',
+      text: c.mention,
+    })
+  }
   blocks.push(contextBlock)
   return blocks
 }

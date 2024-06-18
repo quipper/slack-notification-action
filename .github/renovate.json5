@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
+    "config:recommended",
     ":automergeMinor",
     ":automergeDigest",
     ":labels(renovate,renovate/{{depName}})",
@@ -10,4 +10,8 @@
     "helpers:pinGitHubActionDigests",
   ],
   "platformAutomerge": false,
+  "labels": [
+    "renovate",
+    "renovate/{{depName}}",
+  ],
 }

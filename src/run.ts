@@ -30,7 +30,7 @@ export const run = async (inputs: Inputs): Promise<void> => {
 
   const blocks = getSlackBlocks(summary, {
     repository: github.context.repo.repo,
-    actor: github.context.actor,
+    mention: getSlackMention(),
   })
   core.info(`Sending blocks: ${JSON.stringify(blocks, undefined, 2)}`)
 
@@ -65,4 +65,12 @@ const getWorkflowRunForEvent = async (octokit: Octokit) => {
   })
   core.info(`Getting the workflow run ${workflowRun.node_id}`)
   return await getWorkflowRun(octokit, { id: workflowRun.node_id })
+}
+
+const getSlackMention = (): string | null => {
+  if (github.context.eventName === 'schedule') {
+    // For a scheduled event, github.actor is the last committer. Do not mention it.
+    return null
+  }
+  return `@${github.context.actor}`
 }

@@ -36,6 +36,9 @@ importers:
       '@octokit/graphql-schema':
         specifier: 15.18.1
         version: 15.18.1
+      '@octokit/webhooks-types':
+        specifier: ^7.5.1
+        version: 7.5.1
       '@tsconfig/node20':
         specifier: 20.1.4
         version: 20.1.4
@@ -971,6 +974,9 @@ packages:
 
   '@octokit/types@13.5.0':
     resolution: {integrity: sha512-HdqWTf5Z3qwDVlzCrP8UJquMwunpDiMPt5er+QjGzL4hqr/vBVY/MauQgS1xWxCDT1oMx1EULyqxncdCY/NVSQ==}
+
+  '@octokit/webhooks-types@7.5.1':
+    resolution: {integrity: sha512-1dozxWEP8lKGbtEu7HkRbK1F/nIPuJXNfT0gd96y6d3LcHZTtRtlf8xz3nicSJfesADxJyDh+mWBOsdLkqgzYw==}
 
   '@peculiar/asn1-schema@2.3.8':
     resolution: {integrity: sha512-ULB1XqHKx1WBU/tTFIA+uARuRoBVZ4pNdOA878RDrRbBfBGcSzi5HBkdScC6ZbHn8z7L8gmKCgPC1LHRrP46tA==}
@@ -4296,6 +4302,8 @@ snapshots:
   '@octokit/types@13.5.0':
     dependencies:
       '@octokit/openapi-types': 22.2.0
+
+  '@octokit/webhooks-types@7.5.1': {}
 
   '@peculiar/asn1-schema@2.3.8':
     dependencies:

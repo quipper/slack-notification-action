@@ -1,7 +1,7 @@
-import assert from 'assert'
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import * as slack from '@slack/web-api'
+import * as webhook from '@octokit/webhooks-types'
 import { getSlackBlocks } from './slack.js'
 import { getWorkflowRun } from './queries/workflow-run.js'
 import { getWorkflowRunSummary } from './workflow-run.js'
@@ -48,13 +48,9 @@ export const run = async (inputs: Inputs): Promise<void> => {
 
 const getWorkflowRunForEvent = async (octokit: Octokit) => {
   if (github.context.eventName === 'workflow_run') {
-    const workflowRun: unknown = github.context.payload.workflow_run
-    assert(typeof workflowRun === 'object')
-    assert(workflowRun !== null)
-    assert('node_id' in workflowRun)
-    assert(typeof workflowRun.node_id === 'string')
-    core.info(`Getting the target workflow run ${workflowRun.node_id}`)
-    return await getWorkflowRun(octokit, { id: workflowRun.node_id })
+    const payload = github.context.payload as webhook.WorkflowRunEvent
+    core.info(`Getting the target workflow run ${payload.workflow_run.node_id}`)
+    return await getWorkflowRun(octokit, { id: payload.workflow_run.node_id })
   }
 
   core.info(`Getting the current workflow run ${github.context.runId}`)
@@ -68,6 +64,13 @@ const getWorkflowRunForEvent = async (octokit: Octokit) => {
 }
 
 const getSlackMention = (): string | null => {
+  if (github.context.eventName === 'workflow_run') {
+    const payload = github.context.payload as webhook.WorkflowRunEvent
+    if (payload.workflow_run.event === 'schedule') {
+      // For a scheduled event, github.actor is the last committer. Do not mention it.
+      return null
+    }
+  }
   if (github.context.eventName === 'schedule') {
     // For a scheduled event, github.actor is the last committer. Do not mention it.
     return null

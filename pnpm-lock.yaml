@@ -37,7 +37,7 @@ importers:
         specifier: 15.18.1
         version: 15.18.1
       '@octokit/webhooks-types':
-        specifier: ^7.5.1
+        specifier: 7.5.1
         version: 7.5.1
       '@tsconfig/node20':
         specifier: 20.1.4

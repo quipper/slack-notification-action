@@ -1,12 +1,16 @@
 import { ContextBlock, KnownBlock, MrkdwnElement } from '@slack/web-api'
-import { WorkflowRunSummary } from './workflow-run.js'
+import { FailedJob, WorkflowRunSummary } from './workflow-run.js'
 
 type Context = {
   repository: string
   actor: string
 }
 
-export const getSlackBlocks = (w: WorkflowRunSummary, c: Context): KnownBlock[] => {
+export type Templates = {
+  lostCommunicationErrorMessage: string
+}
+
+export const getSlackBlocks = (w: WorkflowRunSummary, c: Context, templates: Templates): KnownBlock[] => {
   const blocks: KnownBlock[] = [
     {
       type: 'section',
@@ -18,15 +22,11 @@ export const getSlackBlocks = (w: WorkflowRunSummary, c: Context): KnownBlock[] 
   ]
 
   for (const failedJob of w.failedJobs) {
-    const lines = [`Job *${failedJob.name}*`]
-    if (failedJob.failureAnnotationMessages.length > 0) {
-      lines.push('```', ...failedJob.failureAnnotationMessages, '```')
-    }
     blocks.push({
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: lines.join('\n'),
+        text: [`Job *${failedJob.name}*`, ...getFailedJobCause(failedJob, templates)].join('\n'),
       },
     })
   }
@@ -44,6 +44,19 @@ export const getSlackBlocks = (w: WorkflowRunSummary, c: Context): KnownBlock[] 
   }
   blocks.push(contextBlock)
   return blocks
+}
+
+export const getFailedJobCause = (failedJob: FailedJob, templates: Templates): string[] => {
+  for (const m of failedJob.failureAnnotationMessages) {
+    if (m.match(/The self-hosted runner: .+? lost communication with the server/)) {
+      return [templates.lostCommunicationErrorMessage]
+    }
+  }
+
+  if (failedJob.failureAnnotationMessages.length > 0) {
+    return ['```', ...failedJob.failureAnnotationMessages, '```']
+  }
+  return []
 }
 
 const getPullRequestBlock = (w: WorkflowRunSummary): MrkdwnElement[] => {

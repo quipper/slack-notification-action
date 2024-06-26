@@ -2,7 +2,7 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import * as slack from '@slack/web-api'
 import * as webhook from '@octokit/webhooks-types'
-import { getSlackBlocks } from './slack.js'
+import { getSlackBlocks, Templates } from './slack.js'
 import { getWorkflowRun } from './queries/workflow-run.js'
 import { getWorkflowRunSummary } from './workflow-run.js'
 
@@ -12,7 +12,7 @@ type Inputs = {
   slackChannelId: string
   slackAppToken: string
   githubToken: string
-}
+} & Templates
 
 export const run = async (inputs: Inputs): Promise<void> => {
   const octokit = github.getOctokit(inputs.githubToken)
@@ -28,10 +28,14 @@ export const run = async (inputs: Inputs): Promise<void> => {
     return
   }
 
-  const blocks = getSlackBlocks(summary, {
-    repository: github.context.repo.repo,
-    actor: github.context.actor,
-  })
+  const blocks = getSlackBlocks(
+    summary,
+    {
+      repository: github.context.repo.repo,
+      actor: github.context.actor,
+    },
+    inputs,
+  )
   core.info(`Sending blocks: ${JSON.stringify(blocks, undefined, 2)}`)
 
   if (inputs.slackAppToken === '') {

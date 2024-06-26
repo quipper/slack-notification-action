@@ -13,6 +13,11 @@ inputs:
     required: true
     default: ${{ github.token }}
 
+  lost-communication-error-message:
+    description: Message to send when "The self-hosted runner lost communication with the server" error
+    required: true
+    default: The job was failed due to an infrastructure problem. Please rerun it if needed.
+
 runs:
   using: 'node20'
   main: 'dist/index.js'

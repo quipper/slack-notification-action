@@ -14,7 +14,7 @@ export type WorkflowRunSummary = {
   associatedPullRequest: AssociatedPullRequest | undefined
 }
 
-type FailedJob = {
+export type FailedJob = {
   name: string
   failureAnnotationMessages: string[]
 }

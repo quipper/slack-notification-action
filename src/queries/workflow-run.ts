@@ -9,6 +9,7 @@ const query = /* GraphQL */ `
       __typename
       ... on WorkflowRun {
         url
+        event
         workflow {
           name
         }
@@ -39,6 +40,7 @@ const query = /* GraphQL */ `
               nodes {
                 number
                 url
+                title
               }
             }
           }

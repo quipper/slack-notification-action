@@ -1,9 +1,9 @@
-import { ContextBlock, KnownBlock } from '@slack/web-api'
+import { ContextBlock, KnownBlock, MrkdwnElement } from '@slack/web-api'
 import { WorkflowRunSummary } from './workflow-run.js'
 
 type Context = {
   repository: string
-  mention: string | null
+  actor: string
 }
 
 export const getSlackBlocks = (w: WorkflowRunSummary, c: Context): KnownBlock[] => {
@@ -38,20 +38,39 @@ export const getSlackBlocks = (w: WorkflowRunSummary, c: Context): KnownBlock[] 
         type: 'mrkdwn',
         text: `:github: ${c.repository}/*${w.branch}*`,
       },
+      ...getPullRequestBlock(w),
+      ...getMentionBlock(w, c),
     ],
-  }
-  if (w.associatedPullRequest) {
-    contextBlock.elements.push({
-      type: 'mrkdwn',
-      text: `:pr_merged: <${w.associatedPullRequest.url}|#${w.associatedPullRequest.number}>`,
-    })
-  }
-  if (c.mention) {
-    contextBlock.elements.push({
-      type: 'mrkdwn',
-      text: c.mention,
-    })
   }
   blocks.push(contextBlock)
   return blocks
+}
+
+const getPullRequestBlock = (w: WorkflowRunSummary): MrkdwnElement[] => {
+  if (!w.associatedPullRequest) {
+    return []
+  }
+  if (w.event === 'schedule') {
+    // For a scheduled event, do not show the last commit.
+    return []
+  }
+  return [
+    {
+      type: 'mrkdwn',
+      text: `:pr_merged: <${w.associatedPullRequest.url}|#${w.associatedPullRequest.number}> ${w.associatedPullRequest.title}`,
+    },
+  ]
+}
+
+const getMentionBlock = (w: WorkflowRunSummary, c: Context): MrkdwnElement[] => {
+  if (w.event === 'schedule') {
+    // For a scheduled event, github.actor is the last committer. Do not mention it.
+    return []
+  }
+  return [
+    {
+      type: 'mrkdwn',
+      text: `@${c.actor}`,
+    },
+  ]
 }

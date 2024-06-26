@@ -5,6 +5,7 @@ import { CheckAnnotationLevel, CheckConclusionState } from './generated/graphql-
 export type WorkflowRunSummary = {
   workflowName: string
   workflowRunUrl: string
+  event: string
   branch: string | undefined
   conclusion: CheckConclusionState | null | undefined
   cancelled: boolean
@@ -21,6 +22,7 @@ type FailedJob = {
 type AssociatedPullRequest = {
   number: number
   url: string
+  title: string
 }
 
 export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery): WorkflowRunSummary => {
@@ -53,6 +55,7 @@ export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery): Workflo
   return {
     workflowName: workflowRun.node.workflow.name,
     workflowRunUrl: workflowRun.node.url,
+    event: workflowRun.node.event,
     branch: checkSuite.branch?.name,
     conclusion: checkSuite.conclusion,
     cancelled: conclusions.some((c) => c === CheckConclusionState.Cancelled),
@@ -76,5 +79,6 @@ const getAssociatedPullRequest = (workflowRun: GetWorkflowRunQuery): AssociatedP
   return {
     number: pull.number,
     url: pull.url,
+    title: pull.title,
   }
 }

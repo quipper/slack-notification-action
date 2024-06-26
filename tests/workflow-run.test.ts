@@ -12,6 +12,7 @@ describe('getWorkflowRunSummary', () => {
         workflow: {
           name: 'test',
         },
+        event: 'push',
         checkSuite: {
           conclusion: CheckConclusionState.Failure,
           branch: {
@@ -46,6 +47,7 @@ describe('getWorkflowRunSummary', () => {
                 {
                   number: 484,
                   url: 'https://github.com/int128/workflow-run-summary-action/pull/484',
+                  title: 'Example',
                 },
               ],
             },
@@ -56,6 +58,7 @@ describe('getWorkflowRunSummary', () => {
     expect(outputs).toStrictEqual<WorkflowRunSummary>({
       workflowName: 'test',
       workflowRunUrl: 'https://github.com/int128/workflow-run-summary-action/actions/runs/5861542956',
+      event: 'push',
       branch: 'main',
       conclusion: CheckConclusionState.Failure,
       cancelled: false,
@@ -69,6 +72,7 @@ describe('getWorkflowRunSummary', () => {
       associatedPullRequest: {
         number: 484,
         url: 'https://github.com/int128/workflow-run-summary-action/pull/484',
+        title: 'Example',
       },
     })
   })
@@ -83,6 +87,7 @@ describe('getWorkflowRunSummary', () => {
         workflow: {
           name: 'test',
         },
+        event: 'push',
         checkSuite: {
           checkRuns: {
             nodes: [
@@ -106,6 +111,7 @@ describe('getWorkflowRunSummary', () => {
     expect(outputs).toStrictEqual<WorkflowRunSummary>({
       workflowName: 'test',
       workflowRunUrl: 'https://github.com/int128/workflow-run-summary-action/actions/runs/5861542956',
+      event: 'push',
       branch: undefined,
       conclusion: undefined,
       cancelled: false,

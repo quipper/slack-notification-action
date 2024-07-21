@@ -4,7 +4,6 @@
     "config:recommended",
     ":automergeMinor",
     ":automergeDigest",
-    ":labels(renovate,renovate/{{depName}})",
     ":reviewer(team:k12-dev-tech-strategy-devops)",
     "github>int128/typescript-action-renovate-config#v1.6.0",
     "helpers:pinGitHubActionDigests",

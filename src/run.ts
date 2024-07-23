@@ -4,7 +4,8 @@ import * as slack from '@slack/web-api'
 import * as webhook from '@octokit/webhooks-types'
 import { getSlackBlocks, Templates } from './slack.js'
 import { getWorkflowRun } from './queries/workflow-run.js'
-import { getWorkflowRunSummary } from './workflow-run.js'
+import { getWorkflowRunSummary, WorkflowRunSummary } from './workflow-run.js'
+import { CheckConclusionState } from './generated/graphql-types.js'
 
 type Octokit = ReturnType<typeof github.getOctokit>
 
@@ -19,15 +20,25 @@ export const run = async (inputs: Inputs): Promise<void> => {
   const workflowRun = await getWorkflowRunForEvent(octokit)
 
   const summary = getWorkflowRunSummary(workflowRun)
-  if (summary.cancelled) {
-    core.info('This workflow run is cancelled. Do nothing.')
-    return
-  }
-  if (summary.skipped) {
-    core.info('This workflow run is skipped. Do nothing.')
-    return
-  }
+  core.startGroup(`WorkflowRunSummary`)
+  core.info(JSON.stringify(summary, undefined, 2))
+  core.endGroup()
 
+  switch (summary.conclusion) {
+    case CheckConclusionState.Success:
+    case CheckConclusionState.TimedOut:
+    case CheckConclusionState.ActionRequired:
+    case CheckConclusionState.StartupFailure:
+      return await send(summary, inputs)
+  }
+  // For other conclusions, determine if any job is failed to exclude cancelled ot skipped.
+  if (summary.failedJobs.length > 0) {
+    return await send(summary, inputs)
+  }
+  core.info('Nothing sent')
+}
+
+const send = async (summary: WorkflowRunSummary, inputs: Inputs) => {
   const blocks = getSlackBlocks(
     summary,
     {

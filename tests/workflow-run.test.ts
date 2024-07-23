@@ -18,13 +18,6 @@ describe('getWorkflowRunSummary', () => {
           branch: {
             name: 'main',
           },
-          checkRuns: {
-            nodes: [
-              {
-                conclusion: CheckConclusionState.Success,
-              },
-            ],
-          },
           failedCheckRuns: {
             nodes: [
               {
@@ -61,8 +54,6 @@ describe('getWorkflowRunSummary', () => {
       event: 'push',
       branch: 'main',
       conclusion: CheckConclusionState.Failure,
-      cancelled: false,
-      skipped: false,
       failedJobs: [
         {
           name: 'jest',
@@ -89,13 +80,6 @@ describe('getWorkflowRunSummary', () => {
         },
         event: 'push',
         checkSuite: {
-          checkRuns: {
-            nodes: [
-              {
-                conclusion: CheckConclusionState.Success,
-              },
-            ],
-          },
           failedCheckRuns: {
             nodes: [],
           },
@@ -114,8 +98,6 @@ describe('getWorkflowRunSummary', () => {
       event: 'push',
       branch: undefined,
       conclusion: undefined,
-      cancelled: false,
-      skipped: false,
       failedJobs: [],
       associatedPullRequest: undefined,
     })

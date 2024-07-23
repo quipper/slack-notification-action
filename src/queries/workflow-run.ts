@@ -18,11 +18,6 @@ const query = /* GraphQL */ `
           branch {
             name
           }
-          checkRuns(first: 100, filterBy: { checkType: LATEST }) {
-            nodes {
-              conclusion
-            }
-          }
           failedCheckRuns: checkRuns(first: 10, filterBy: { checkType: LATEST, conclusions: FAILURE }) {
             nodes {
               name

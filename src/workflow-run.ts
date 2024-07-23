@@ -8,8 +8,6 @@ export type WorkflowRunSummary = {
   event: string
   branch: string | undefined
   conclusion: CheckConclusionState | null | undefined
-  cancelled: boolean
-  skipped: boolean
   failedJobs: FailedJob[]
   associatedPullRequest: AssociatedPullRequest | undefined
 }
@@ -29,13 +27,6 @@ export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery): Workflo
   assert(workflowRun.node != null)
   assert(workflowRun.node.__typename === 'WorkflowRun')
   const checkSuite = workflowRun.node.checkSuite
-
-  const conclusions: CheckConclusionState[] = []
-  for (const checkRun of checkSuite.checkRuns?.nodes ?? []) {
-    if (checkRun?.conclusion) {
-      conclusions.push(checkRun.conclusion)
-    }
-  }
 
   const failedJobs: FailedJob[] = []
   for (const checkRun of checkSuite.failedCheckRuns?.nodes ?? []) {
@@ -58,8 +49,6 @@ export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery): Workflo
     event: workflowRun.node.event,
     branch: checkSuite.branch?.name,
     conclusion: checkSuite.conclusion,
-    cancelled: conclusions.some((c) => c === CheckConclusionState.Cancelled),
-    skipped: conclusions.every((c) => c === CheckConclusionState.Skipped),
     failedJobs,
     associatedPullRequest: getAssociatedPullRequest(workflowRun),
   }

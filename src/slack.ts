@@ -54,7 +54,13 @@ export const getFailedJobCause = (failedJob: FailedJob, templates: Templates): s
   }
 
   if (failedJob.failureAnnotationMessages.length > 0) {
-    return ['```', ...failedJob.failureAnnotationMessages, '```']
+    const failureAnnotationMessages = failedJob.failureAnnotationMessages.map((message) => {
+      if (message.length > 300) {
+        return message.substring(0, 300) + '...'
+      }
+      return message
+    })
+    return ['```', ...failureAnnotationMessages, '```']
   }
   return []
 }

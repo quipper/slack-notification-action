@@ -32,12 +32,12 @@ export const run = async (inputs: Inputs): Promise<void> => {
     case CheckConclusionState.StartupFailure:
       return await send(summary, inputs)
   }
-  if (summary.conclusion === null) {
-    core.info(`job.status: ${inputs.githubJobStatus}`)
-    return
-  }
   // For other conclusions, determine if any job is failed to exclude cancelled ot skipped.
   if (summary.failedJobs.length > 0) {
+    return await send(summary, inputs)
+  }
+  // If this action is called in a running job, determine the conclusion from the job status.
+  if (summary.conclusion === null && inputs.githubJobStatus === 'failure') {
     return await send(summary, inputs)
   }
   core.info('Nothing sent')

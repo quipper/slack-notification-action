@@ -13,6 +13,7 @@ type Inputs = {
   slackChannelId: string
   slackAppToken: string
   githubToken: string
+  githubJobStatus: string
 } & Templates
 
 export const run = async (inputs: Inputs): Promise<void> => {
@@ -30,6 +31,10 @@ export const run = async (inputs: Inputs): Promise<void> => {
     case CheckConclusionState.ActionRequired:
     case CheckConclusionState.StartupFailure:
       return await send(summary, inputs)
+  }
+  if (summary.conclusion === null) {
+    core.info(`job.status: ${inputs.githubJobStatus}`)
+    return
   }
   // For other conclusions, determine if any job is failed to exclude cancelled ot skipped.
   if (summary.failedJobs.length > 0) {

@@ -12,6 +12,9 @@ inputs:
     description: GitHub token (optional)
     required: true
     default: ${{ github.token }}
+  github-job-status:
+    description: Current job status
+    default: ${{ job.status }}
 
   lost-communication-error-message:
     description: Message to send when "The self-hosted runner lost communication with the server" error

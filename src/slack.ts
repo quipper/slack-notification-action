@@ -4,6 +4,7 @@ import { FailedJob, WorkflowRunSummary } from './workflow-run.js'
 type Context = {
   repository: string
   actor: string
+  jobStatus: string
 }
 
 export type Templates = {
@@ -11,12 +12,13 @@ export type Templates = {
 }
 
 export const getSlackBlocks = (w: WorkflowRunSummary, c: Context, templates: Templates): KnownBlock[] => {
+  const conclusion = w.conclusion?.toLocaleLowerCase() ?? c.jobStatus
   const blocks: KnownBlock[] = [
     {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `Workflow *<${w.workflowRunUrl}|${w.workflowName}>* ${w.conclusion?.toLocaleLowerCase() ?? ''}`,
+        text: `Workflow *<${w.workflowRunUrl}|${w.workflowName}>* ${conclusion}`,
       },
     },
   ]

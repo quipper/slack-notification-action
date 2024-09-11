@@ -13,8 +13,9 @@ inputs:
     required: true
     default: ${{ github.token }}
   github-job-status:
-    description: Current job status
+    description: job.status
     default: ${{ job.status }}
+    deprecationMessage: Do not set github-job-status. Keep the default value.
 
   lost-communication-error-message:
     description: Message to send when "The self-hosted runner lost communication with the server" error

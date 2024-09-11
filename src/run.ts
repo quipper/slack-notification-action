@@ -32,7 +32,7 @@ export const run = async (inputs: Inputs): Promise<void> => {
     case CheckConclusionState.StartupFailure:
       return await send(summary, inputs)
   }
-  // For other conclusions, determine if any job is failed to exclude cancelled ot skipped.
+  // For other conclusions, determine the conclusion from the failed jobs.
   if (summary.failedJobs.length > 0) {
     return await send(summary, inputs)
   }
@@ -49,6 +49,7 @@ const send = async (summary: WorkflowRunSummary, inputs: Inputs) => {
     {
       repository: github.context.repo.repo,
       actor: github.context.actor,
+      jobStatus: inputs.githubJobStatus,
     },
     inputs,
   )

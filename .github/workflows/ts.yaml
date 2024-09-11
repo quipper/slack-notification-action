@@ -34,7 +34,9 @@ jobs:
       - run: pnpm test
       - run: pnpm build
 
-      - name: Run quipper/slack-notification-action
+      - run: exit 1
+      - if: always()
+        name: Run quipper/slack-notification-action
         uses: ./
         with:
           slack-channel-id: ABCDEF123

@@ -62,4 +62,3 @@ jobs:
     timeout-minutes: 5
     steps:
       - run: echo '::error::This is a fixture error.'
-      - run: exit 1

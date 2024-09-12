@@ -13,27 +13,31 @@ type Inputs = {
   slackChannelId: string
   slackAppToken: string
   githubToken: string
+  githubCurrentJobStatus: string
 } & Templates
 
 export const run = async (inputs: Inputs): Promise<void> => {
   const octokit = github.getOctokit(inputs.githubToken)
   const workflowRun = await getWorkflowRunForEvent(octokit)
-
   const summary = getWorkflowRunSummary(workflowRun)
   core.startGroup(`WorkflowRunSummary`)
   core.info(JSON.stringify(summary, undefined, 2))
   core.endGroup()
 
+  if (summary.failedJobs.length > 0) {
+    core.info(`Found ${summary.failedJobs.length} failed jobs`)
+    return await send(summary, inputs)
+  }
+  if (inputs.githubCurrentJobStatus === 'failure') {
+    core.info('The current job is failing')
+    return await send(summary, inputs)
+  }
   switch (summary.conclusion) {
     case CheckConclusionState.Success:
     case CheckConclusionState.TimedOut:
     case CheckConclusionState.ActionRequired:
     case CheckConclusionState.StartupFailure:
       return await send(summary, inputs)
-  }
-  // For other conclusions, determine if any job is failed to exclude cancelled ot skipped.
-  if (summary.failedJobs.length > 0) {
-    return await send(summary, inputs)
   }
   core.info('Nothing sent')
 }
@@ -47,7 +51,7 @@ const send = async (summary: WorkflowRunSummary, inputs: Inputs) => {
     },
     inputs,
   )
-  core.info(`Sending blocks: ${JSON.stringify(blocks, undefined, 2)}`)
+  core.info(`Sending the message: ${JSON.stringify(blocks, undefined, 2)}`)
 
   if (inputs.slackAppToken === '') {
     core.warning('slack-app-token is not set. Skip sending the message to Slack.')

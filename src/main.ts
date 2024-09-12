@@ -7,6 +7,7 @@ const main = async (): Promise<void> => {
     slackAppToken: core.getInput('slack-app-token'),
     githubToken: core.getInput('github-token', { required: true }),
     lostCommunicationErrorMessage: core.getInput('lost-communication-error-message', { required: true }),
+    githubCurrentJobStatus: core.getInput('github-job-status', { required: true }),
   })
 }
 

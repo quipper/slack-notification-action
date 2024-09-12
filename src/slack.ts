@@ -1,4 +1,4 @@
-import { ContextBlock, KnownBlock, MrkdwnElement } from '@slack/web-api'
+import { KnownBlock, MrkdwnElement, SectionBlock } from '@slack/web-api'
 import { FailedJob, WorkflowRunSummary } from './workflow-run.js'
 
 type Context = {
@@ -12,7 +12,7 @@ export type Templates = {
 
 export const getSlackBlocks = (w: WorkflowRunSummary, c: Context, templates: Templates): KnownBlock[] => {
   const conclusion = w.conclusion?.toLocaleLowerCase() ?? ''
-  const blocks: KnownBlock[] = [
+  return [
     {
       type: 'section',
       text: {
@@ -20,32 +20,29 @@ export const getSlackBlocks = (w: WorkflowRunSummary, c: Context, templates: Tem
         text: `Workflow *<${w.workflowRunUrl}|${w.workflowName}>* ${conclusion}`,
       },
     },
+    ...getFailedJobBlocks(w, templates),
+    {
+      type: 'context',
+      elements: [
+        {
+          type: 'mrkdwn',
+          text: `:github: ${c.repository}/*${w.branch}*`,
+        },
+        ...getPullRequestBlock(w),
+        ...getMentionBlock(w, c),
+      ],
+    },
   ]
-
-  for (const failedJob of w.failedJobs) {
-    blocks.push({
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: [`Job *${failedJob.name}*`, ...getFailedJobCause(failedJob, templates)].join('\n'),
-      },
-    })
-  }
-
-  const contextBlock: ContextBlock = {
-    type: 'context',
-    elements: [
-      {
-        type: 'mrkdwn',
-        text: `:github: ${c.repository}/*${w.branch}*`,
-      },
-      ...getPullRequestBlock(w),
-      ...getMentionBlock(w, c),
-    ],
-  }
-  blocks.push(contextBlock)
-  return blocks
 }
+
+const getFailedJobBlocks = (w: WorkflowRunSummary, templates: Templates): SectionBlock[] =>
+  w.failedJobs.map((failedJob) => ({
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text: [`Job *${failedJob.name}*`, ...getFailedJobCause(failedJob, templates)].join('\n'),
+    },
+  }))
 
 export const getFailedJobCause = (failedJob: FailedJob, templates: Templates): string[] => {
   for (const m of failedJob.failureAnnotationMessages) {

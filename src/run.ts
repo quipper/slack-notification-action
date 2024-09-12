@@ -13,32 +13,29 @@ type Inputs = {
   slackChannelId: string
   slackAppToken: string
   githubToken: string
-  githubJobStatus: string
+  githubCurrentJobStatus: string
 } & Templates
 
 export const run = async (inputs: Inputs): Promise<void> => {
   const octokit = github.getOctokit(inputs.githubToken)
   const workflowRun = await getWorkflowRunForEvent(octokit)
-
   const summary = getWorkflowRunSummary(workflowRun)
   core.startGroup(`WorkflowRunSummary`)
   core.info(JSON.stringify(summary, undefined, 2))
   core.endGroup()
 
+  if (summary.failedJobs.length > 0) {
+    return await send(summary, inputs)
+  }
+  if (inputs.githubCurrentJobStatus === 'failure') {
+    return await send(summary, inputs)
+  }
   switch (summary.conclusion) {
     case CheckConclusionState.Success:
     case CheckConclusionState.TimedOut:
     case CheckConclusionState.ActionRequired:
     case CheckConclusionState.StartupFailure:
       return await send(summary, inputs)
-  }
-  // For other conclusions, determine the conclusion from the failed jobs.
-  if (summary.failedJobs.length > 0) {
-    return await send(summary, inputs)
-  }
-  // If this action is called in a running job, determine the conclusion from the job status.
-  if (summary.conclusion === null && inputs.githubJobStatus === 'failure') {
-    return await send(summary, inputs)
   }
   core.info('Nothing sent')
 }
@@ -49,7 +46,6 @@ const send = async (summary: WorkflowRunSummary, inputs: Inputs) => {
     {
       repository: github.context.repo.repo,
       actor: github.context.actor,
-      jobStatus: inputs.githubJobStatus,
     },
     inputs,
   )

@@ -34,9 +34,7 @@ jobs:
       - run: pnpm test
       - run: pnpm build
 
-      - run: exit 1
-      - if: always()
-        name: Run quipper/slack-notification-action
+      - name: Run quipper/slack-notification-action
         uses: ./
         with:
           slack-channel-id: ABCDEF123
@@ -64,3 +62,4 @@ jobs:
     timeout-minutes: 5
     steps:
       - run: echo '::error::This is a fixture error.'
+      - run: exit 1

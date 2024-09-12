@@ -25,9 +25,11 @@ export const run = async (inputs: Inputs): Promise<void> => {
   core.endGroup()
 
   if (summary.failedJobs.length > 0) {
+    core.info(`Found ${summary.failedJobs.length} failed jobs`)
     return await send(summary, inputs)
   }
   if (inputs.githubCurrentJobStatus === 'failure') {
+    core.info('The current job is failing')
     return await send(summary, inputs)
   }
   switch (summary.conclusion) {
@@ -49,7 +51,7 @@ const send = async (summary: WorkflowRunSummary, inputs: Inputs) => {
     },
     inputs,
   )
-  core.info(`Sending blocks: ${JSON.stringify(blocks, undefined, 2)}`)
+  core.info(`Sending the message: ${JSON.stringify(blocks, undefined, 2)}`)
 
   if (inputs.slackAppToken === '') {
     core.warning('slack-app-token is not set. Skip sending the message to Slack.')

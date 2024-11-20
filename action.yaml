@@ -21,6 +21,11 @@ inputs:
     description: Message to send when "The self-hosted runner lost communication with the server" error
     required: true
     default: The job was failed due to an infrastructure problem. Please rerun it if needed.
+  mention-message:
+    description: Message to mention the current user. Set to empty to disable mentioning.
+    required: false
+    default: |-
+      @${{ github.actor }}
 
 runs:
   using: 'node20'

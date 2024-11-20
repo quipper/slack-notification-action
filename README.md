@@ -93,6 +93,7 @@ Otherwise, it inspects the current workflow run.
 | `slack-app-token`                  | (dry-run)       | Bot token of Slack App                                                                 |
 | `github-token`                     | `github.token`  | GitHub token                                                                           |
 | `lost-communication-error-message` | See action.yaml | Message to send when "The self-hosted runner lost communication with the server" error |
+| `mention-message`                  | `github.actor`  | Message to mention the current user                                                    |
 
 ### Outputs
 

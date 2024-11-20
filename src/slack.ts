@@ -8,6 +8,7 @@ type Context = {
 
 export type Templates = {
   lostCommunicationErrorMessage: string
+  mentionMessage: string
 }
 
 export const getSlackBlocks = (w: WorkflowRunSummary, c: Context, templates: Templates): KnownBlock[] => {
@@ -29,7 +30,7 @@ export const getSlackBlocks = (w: WorkflowRunSummary, c: Context, templates: Tem
           text: `:github: ${c.repository}/*${w.branch}*`,
         },
         ...getPullRequestBlock(w),
-        ...getMentionBlock(w, c),
+        ...getMentionBlock(w, templates),
       ],
     },
   ]
@@ -79,7 +80,7 @@ const getPullRequestBlock = (w: WorkflowRunSummary): MrkdwnElement[] => {
   ]
 }
 
-const getMentionBlock = (w: WorkflowRunSummary, c: Context): MrkdwnElement[] => {
+const getMentionBlock = (w: WorkflowRunSummary, templates: Templates): MrkdwnElement[] => {
   if (w.event === 'schedule') {
     // For a scheduled event, github.actor is the last committer. Do not mention it.
     return []
@@ -87,7 +88,7 @@ const getMentionBlock = (w: WorkflowRunSummary, c: Context): MrkdwnElement[] => 
   return [
     {
       type: 'mrkdwn',
-      text: `@${c.actor}`,
+      text: templates.mentionMessage,
     },
   ]
 }

@@ -1,4 +1,4 @@
-import { getFailedJobCause } from '../src/slack.js'
+import { getFailedJobCause, Templates } from '../src/slack.js'
 
 describe('getFailedJobCause', () => {
   it('should return lostCommunicationErrorMessage when the failureAnnotationMessages contain lost communication message', () => {
@@ -8,8 +8,9 @@ describe('getFailedJobCause', () => {
         'The self-hosted runner: example-vnvrd-runner-98tzt lost communication with the server. Verify the machine is running and has a healthy network connection. Anything in your workflow that terminates the runner process, starves it for CPU/Memory, or blocks its network access can cause this error.',
       ],
     }
-    const templates = {
+    const templates: Templates = {
       lostCommunicationErrorMessage: 'SORRY',
+      mentionMessage: '@octocat',
     }
     const cause = getFailedJobCause(failedJob, templates)
     expect(cause).toStrictEqual(['SORRY'])
@@ -20,8 +21,9 @@ describe('getFailedJobCause', () => {
       name: 'job2',
       failureAnnotationMessages: [],
     }
-    const templates = {
+    const templates: Templates = {
       lostCommunicationErrorMessage: 'SORRY',
+      mentionMessage: '@octocat',
     }
     const cause = getFailedJobCause(failedJob, templates)
     expect(cause).toStrictEqual([])
@@ -32,8 +34,9 @@ describe('getFailedJobCause', () => {
       name: 'job3',
       failureAnnotationMessages: ['message1', 'message2'],
     }
-    const templates = {
+    const templates: Templates = {
       lostCommunicationErrorMessage: 'SORRY',
+      mentionMessage: '@octocat',
     }
     const cause = getFailedJobCause(failedJob, templates)
     expect(cause).toStrictEqual(['```', 'message1', 'message2', '```'])

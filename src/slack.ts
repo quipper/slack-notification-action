@@ -85,6 +85,9 @@ const getMentionBlock = (w: WorkflowRunSummary, templates: Templates): MrkdwnEle
     // For a scheduled event, github.actor is the last committer. Do not mention it.
     return []
   }
+  if (templates.mentionMessage === '') {
+    return []
+  }
   return [
     {
       type: 'mrkdwn',

@@ -4,6 +4,7 @@ import { FailedJob, WorkflowRunSummary } from './workflow-run.js'
 type Context = {
   repository: string
   actor: string
+  currentJobStatus: string
 }
 
 export type Templates = {
@@ -12,13 +13,14 @@ export type Templates = {
 }
 
 export const getSlackBlocks = (w: WorkflowRunSummary, c: Context, templates: Templates): KnownBlock[] => {
-  const conclusion = w.conclusion?.toLocaleLowerCase() ?? ''
+  // When the current workflow run is still running, use the current job status.
+  const conclusion = w.conclusion ?? c.currentJobStatus
   return [
     {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `Workflow *<${w.workflowRunUrl}|${w.workflowName}>* ${conclusion}`,
+        text: `Workflow *<${w.workflowRunUrl}|${w.workflowName}>* ${conclusion.toLocaleLowerCase()}`,
       },
     },
     ...getFailedJobBlocks(w, templates),

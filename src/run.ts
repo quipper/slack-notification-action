@@ -48,6 +48,7 @@ const send = async (summary: WorkflowRunSummary, inputs: Inputs) => {
     {
       repository: github.context.repo.repo,
       actor: github.context.actor,
+      currentJobStatus: inputs.githubCurrentJobStatus,
     },
     inputs,
   )

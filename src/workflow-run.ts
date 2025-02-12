@@ -14,6 +14,7 @@ export type WorkflowRunSummary = {
 
 export type FailedJob = {
   name: string
+  failureStepNames: string[]
   failureAnnotationMessages: string[]
 }
 
@@ -31,6 +32,12 @@ export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery): Workflo
   const failedJobs: FailedJob[] = []
   for (const checkRun of checkSuite.failedCheckRuns?.nodes ?? []) {
     assert(checkRun != null)
+    const failureStepNames = new Set<string>()
+    for (const step of checkRun.steps?.nodes ?? []) {
+      if (step?.conclusion === CheckConclusionState.Failure) {
+        failureStepNames.add(step.name)
+      }
+    }
     const failureAnnotationMessages = new Set<string>()
     for (const annotation of checkRun.annotations?.nodes ?? []) {
       if (annotation?.message && annotation.annotationLevel === CheckAnnotationLevel.Failure) {
@@ -39,6 +46,7 @@ export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery): Workflo
     }
     failedJobs.push({
       name: checkRun.name,
+      failureStepNames: [...failureStepNames],
       failureAnnotationMessages: [...failureAnnotationMessages],
     })
   }

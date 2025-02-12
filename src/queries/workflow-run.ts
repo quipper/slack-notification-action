@@ -5,6 +5,9 @@ type Octokit = ReturnType<typeof github.getOctokit>
 
 const query = /* GraphQL */ `
   query getWorkflowRun($id: ID!) {
+    rateLimit {
+      cost
+    }
     node(id: $id) {
       __typename
       ... on WorkflowRun {
@@ -21,6 +24,12 @@ const query = /* GraphQL */ `
           failedCheckRuns: checkRuns(first: 10, filterBy: { checkType: LATEST, conclusions: FAILURE }) {
             nodes {
               name
+              steps(first: 30) {
+                nodes {
+                  name
+                  conclusion
+                }
+              }
               annotations(first: 10) {
                 nodes {
                   message

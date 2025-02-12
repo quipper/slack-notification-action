@@ -3,8 +3,6 @@ import { getWorkflowRunSummary, WorkflowRunSummary } from '../src/workflow-run.j
 
 describe('getWorkflowRunSummary', () => {
   test('full fields', () => {
-    // https://github.com/int128/workflow-run-summary-action/actions/runs/5861542956/job/15891810930
-    // {"id": "CS_kwDOGSet3s8AAAADg4c9nQ"}
     const outputs = getWorkflowRunSummary({
       node: {
         __typename: 'WorkflowRun',
@@ -22,6 +20,30 @@ describe('getWorkflowRunSummary', () => {
             nodes: [
               {
                 name: 'jest',
+                steps: {
+                  nodes: [
+                    {
+                      name: 'Set up job',
+                      conclusion: CheckConclusionState.Success,
+                    },
+                    {
+                      name: 'Run actions/checkout@v4',
+                      conclusion: CheckConclusionState.Success,
+                    },
+                    {
+                      name: 'Run make',
+                      conclusion: CheckConclusionState.Failure,
+                    },
+                    {
+                      name: 'Post Run actions/checkout@v4',
+                      conclusion: CheckConclusionState.Success,
+                    },
+                    {
+                      name: 'Complete job',
+                      conclusion: CheckConclusionState.Success,
+                    },
+                  ],
+                },
                 annotations: {
                   nodes: [
                     {
@@ -57,6 +79,7 @@ describe('getWorkflowRunSummary', () => {
       failedJobs: [
         {
           name: 'jest',
+          failureStepNames: ['Run make'],
           failureAnnotationMessages: ['this is an example'],
         },
       ],

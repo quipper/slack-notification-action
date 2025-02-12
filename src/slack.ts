@@ -54,14 +54,18 @@ export const getFailedJobCause = (failedJob: FailedJob, templates: Templates): s
     }
   }
 
-  if (failedJob.failureAnnotationMessages.length > 0) {
-    const failureAnnotationMessages = failedJob.failureAnnotationMessages.map((message) => {
+  const failureMessages = []
+  failureMessages.push(...failedJob.failureStepNames)
+  failureMessages.push(
+    ...failedJob.failureAnnotationMessages.map((message) => {
       if (message.length > 300) {
         return message.substring(0, 300) + '...'
       }
       return message
-    })
-    return ['```', ...failureAnnotationMessages, '```']
+    }),
+  )
+  if (failedJob.failureStepNames.length > 0) {
+    return ['```', ...failureMessages, '```']
   }
   return []
 }

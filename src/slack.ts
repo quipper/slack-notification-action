@@ -64,7 +64,7 @@ export const getFailedJobCause = (failedJob: FailedJob, templates: Templates): s
       return message
     }),
   )
-  if (failedJob.failureStepNames.length > 0) {
+  if (failureMessages.length > 0) {
     return ['```', ...failureMessages, '```']
   }
   return []

@@ -10,7 +10,7 @@ const main = async (): Promise<void> => {
       lostCommunicationErrorMessage: core.getInput('lost-communication-error-message', { required: true }),
       mentionMessage: core.getInput('mention-message'),
       githubCurrentJobStatus: core.getInput('github-job-status', { required: true }),
-      githubContext: github.getContext(),
+      githubContext: await github.getContext(),
     },
     github.getOctokit(),
   )

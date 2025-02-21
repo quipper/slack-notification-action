@@ -1,4 +1,5 @@
 import assert from 'assert'
+import * as fs from 'fs/promises'
 import * as webhook from '@octokit/webhooks-types'
 import { Octokit } from '@octokit/action'
 
@@ -15,7 +16,7 @@ export type Context = {
   }
 }
 
-export const getContext = (): Context => {
+export const getContext = async (): Promise<Context> => {
   assert(process.env.GITHUB_REPOSITORY, 'GITHUB_REPOSITORY is required')
   const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/')
   assert(process.env.GITHUB_RUN_ID, 'GITHUB_RUN_ID is required')
@@ -26,7 +27,7 @@ export const getContext = (): Context => {
     repo: { owner, repo },
     runId: Number(process.env.GITHUB_RUN_ID),
     eventName: process.env.GITHUB_EVENT_NAME,
-    payload: JSON.parse(process.env.GITHUB_EVENT_PATH) as webhook.WebhookEvent,
+    payload: JSON.parse(await fs.readFile(process.env.GITHUB_EVENT_PATH, 'utf-8')) as webhook.WebhookEvent,
     actor: process.env.GITHUB_ACTOR,
   }
 }

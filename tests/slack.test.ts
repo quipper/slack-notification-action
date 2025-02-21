@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { getFailedJobCause, Templates } from '../src/slack.js'
 import { FailedJob } from '../src/workflow-run.js'
 

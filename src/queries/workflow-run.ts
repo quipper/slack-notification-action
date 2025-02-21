@@ -1,4 +1,4 @@
-import * as github from '@actions/github'
+import * as github from '../github.js'
 import { GetWorkflowRunQuery, GetWorkflowRunQueryVariables } from '../generated/graphql.js'
 
 type Octokit = ReturnType<typeof github.getOctokit>

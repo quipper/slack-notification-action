@@ -1,7 +1,5 @@
-import * as github from '@actions/github'
+import { Octokit } from '@octokit/action'
 import { GetWorkflowRunQuery, GetWorkflowRunQueryVariables } from '../generated/graphql.js'
-
-type Octokit = ReturnType<typeof github.getOctokit>
 
 const query = /* GraphQL */ `
   query getWorkflowRun($id: ID!) {

@@ -1,24 +1,22 @@
 import * as core from '@actions/core'
-import * as github from '@actions/github'
+import * as github from './github.js'
 import * as slack from '@slack/web-api'
 import * as webhook from '@octokit/webhooks-types'
+import { Octokit } from '@octokit/action'
 import { getSlackBlocks, Templates } from './slack.js'
 import { getWorkflowRun } from './queries/workflow-run.js'
 import { getWorkflowRunSummary, WorkflowRunSummary } from './workflow-run.js'
 import { CheckConclusionState } from './generated/graphql-types.js'
 
-type Octokit = ReturnType<typeof github.getOctokit>
-
 type Inputs = {
   slackChannelId: string
   slackAppToken: string
-  githubToken: string
   githubCurrentJobStatus: string
+  githubContext: github.Context
 } & Templates
 
-export const run = async (inputs: Inputs): Promise<void> => {
-  const octokit = github.getOctokit(inputs.githubToken)
-  const workflowRun = await getWorkflowRunForEvent(octokit)
+export const run = async (inputs: Inputs, octokit: Octokit): Promise<void> => {
+  const workflowRun = await getWorkflowRunForEvent(octokit, inputs.githubContext)
   const summary = getWorkflowRunSummary(workflowRun)
   core.startGroup(`WorkflowRunSummary`)
   core.info(JSON.stringify(summary, undefined, 2))
@@ -46,8 +44,8 @@ const send = async (summary: WorkflowRunSummary, inputs: Inputs) => {
   const blocks = getSlackBlocks(
     summary,
     {
-      repository: github.context.repo.repo,
-      actor: github.context.actor,
+      repository: inputs.githubContext.repo.repo,
+      actor: inputs.githubContext.actor,
       currentJobStatus: inputs.githubCurrentJobStatus,
     },
     inputs,
@@ -66,18 +64,18 @@ const send = async (summary: WorkflowRunSummary, inputs: Inputs) => {
   core.info('Sent the message to Slack')
 }
 
-const getWorkflowRunForEvent = async (octokit: Octokit) => {
-  if (github.context.eventName === 'workflow_run') {
-    const payload = github.context.payload as webhook.WorkflowRunEvent
+const getWorkflowRunForEvent = async (octokit: Octokit, context: github.Context) => {
+  if (context.eventName === 'workflow_run') {
+    const payload = context.payload as webhook.WorkflowRunEvent
     core.info(`Getting the target workflow run ${payload.workflow_run.node_id}`)
     return await getWorkflowRun(octokit, { id: payload.workflow_run.node_id })
   }
 
-  core.info(`Getting the current workflow run ${github.context.runId}`)
+  core.info(`Getting the current workflow run ${context.runId}`)
   const { data: workflowRun } = await octokit.rest.actions.getWorkflowRun({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    run_id: github.context.runId,
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    run_id: context.runId,
   })
   core.info(`Getting the workflow run ${workflowRun.node_id}`)
   return await getWorkflowRun(octokit, { id: workflowRun.node_id })

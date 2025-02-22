@@ -3,7 +3,7 @@ import * as fs from 'fs/promises'
 import * as webhook from '@octokit/webhooks-types'
 import { Octokit } from '@octokit/action'
 
-export const getOctokit = () => new Octokit()
+export const getOctokit = (token: string) => new Octokit({ auth: token })
 
 export type Context = {
   runId: number

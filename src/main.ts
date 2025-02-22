@@ -12,7 +12,7 @@ const main = async (): Promise<void> => {
       githubCurrentJobStatus: core.getInput('github-job-status', { required: true }),
       githubContext: await github.getContext(),
     },
-    github.getOctokit(),
+    github.getOctokit(core.getInput('github-token', { required: true })),
   )
 }
 

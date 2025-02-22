@@ -10,6 +10,7 @@ const main = async (): Promise<void> => {
       slackChannelId: core.getInput('slack-channel-id', { required: true }),
       slackAppToken: core.getInput('slack-app-token'),
       lostCommunicationErrorMessage: core.getInput('lost-communication-error-message', { required: true }),
+      shutdownSignalErrorMessage: core.getInput('shutdown-signal-error-message', { required: true }),
       mentionMessage: core.getInput('mention-message'),
       githubCurrentJobStatus: core.getInput('github-job-status', { required: true }),
       githubContext: await github.getContext(),

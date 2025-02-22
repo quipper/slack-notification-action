@@ -9,6 +9,7 @@ type Context = {
 
 export type Templates = {
   lostCommunicationErrorMessage: string
+  shutdownSignalErrorMessage: string
   mentionMessage: string
 }
 
@@ -51,6 +52,9 @@ export const getFailedJobCause = (failedJob: FailedJob, templates: Templates): s
   for (const m of failedJob.failureAnnotationMessages) {
     if (m.match(/The self-hosted runner: .+? lost communication with the server/)) {
       return [templates.lostCommunicationErrorMessage]
+    }
+    if (m.match(/^The runner has received a shutdown signal./)) {
+      return [templates.shutdownSignalErrorMessage]
     }
   }
 

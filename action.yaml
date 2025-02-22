@@ -20,7 +20,11 @@ inputs:
   lost-communication-error-message:
     description: Message to send when "The self-hosted runner lost communication with the server" error
     required: true
-    default: The job was failed due to an infrastructure problem. Please rerun it if needed.
+    default: An infrastructure error occurred. Please rerun it if needed.
+  shutdown-signal-error-message:
+    description: Message to send when "The runner has received a shutdown signal" error
+    required: true
+    default: An infrastructure error occurred. Please rerun it if needed.
   mention-message:
     description: Message to mention the current user. Set to empty to disable mentioning.
     required: false

@@ -17,6 +17,7 @@ export type Context = {
 }
 
 export const getContext = async (): Promise<Context> => {
+  // https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables
   assert(process.env.GITHUB_REPOSITORY, 'GITHUB_REPOSITORY is required')
   const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/')
 

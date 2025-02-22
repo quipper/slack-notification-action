@@ -2,8 +2,12 @@ import assert from 'assert'
 import * as fs from 'fs/promises'
 import * as webhook from '@octokit/webhooks-types'
 import { Octokit } from '@octokit/action'
+import { retry } from '@octokit/plugin-retry'
 
-export const getOctokit = (token: string) => new Octokit({ auth: token, authStrategy: null })
+export const getOctokit = (token: string): Octokit => {
+  const OctokitWithRetry = Octokit.plugin(retry)
+  return new OctokitWithRetry({ auth: token, authStrategy: null })
+}
 
 export type Context = {
   repo: {

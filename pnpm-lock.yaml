@@ -34,7 +34,7 @@ importers:
         specifier: 4.5.0
         version: 4.5.0(graphql@16.10.0)
       '@octokit/action':
-        specifier: ^7.0.1
+        specifier: 7.0.1
         version: 7.0.1
       '@octokit/graphql-schema':
         specifier: 15.25.0

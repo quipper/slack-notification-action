@@ -3,6 +3,7 @@ import * as github from './github.js'
 import { run } from './run.js'
 
 const main = async (): Promise<void> => {
+  // https://github.com/octokit/auth-action.js/issues/465
   const octokit = github.getOctokit(core.getInput('github-token', { required: true }))
   await run(
     {

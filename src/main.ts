@@ -3,6 +3,7 @@ import * as github from './github.js'
 import { run } from './run.js'
 
 const main = async (): Promise<void> => {
+  const octokit = github.getOctokit(core.getInput('github-token', { required: true }))
   await run(
     {
       slackChannelId: core.getInput('slack-channel-id', { required: true }),
@@ -12,7 +13,7 @@ const main = async (): Promise<void> => {
       githubCurrentJobStatus: core.getInput('github-job-status', { required: true }),
       githubContext: await github.getContext(),
     },
-    github.getOctokit(core.getInput('github-token', { required: true })),
+    octokit,
   )
 }
 

@@ -10,7 +10,7 @@
   "type": "module",
   "dependencies": {
     "@actions/core": "1.11.1",
-    "@octokit/plugin-retry": "7.1.4",
+    "@octokit/plugin-retry": "8.0.1",
     "@slack/web-api": "7.9.2",
     "graphql": "16.11.0"
   },
@@ -20,7 +20,7 @@
     "@graphql-codegen/import-types-preset": "3.0.0",
     "@graphql-codegen/typescript": "4.1.6",
     "@graphql-codegen/typescript-operations": "4.6.1",
-    "@octokit/action": "7.0.1",
+    "@octokit/action": "8.0.0",
     "@octokit/graphql-schema": "15.25.0",
     "@octokit/webhooks-types": "7.6.1",
     "@tsconfig/node20": "20.1.5",

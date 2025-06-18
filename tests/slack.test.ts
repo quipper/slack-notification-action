@@ -23,6 +23,6 @@ describe('getFailedJobCause', () => {
       ],
     }
     const cause = getFailedJobCause(failedJob)
-    expect(cause).toStrictEqual(['```', 'Run make', 'message1', '```', 'src/index.ts: message2'])
+    expect(cause).toStrictEqual(['```', 'Run make', 'message1', '```', '- src/index.ts: message2'])
   })
 })

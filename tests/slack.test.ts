@@ -7,7 +7,7 @@ describe('getFailedJobCause', () => {
     const failedJob: FailedJob = {
       name: 'job',
       failureStepNames: [],
-      failureAnnotationMessages: [],
+      failureAnnotations: [],
     }
     const cause = getFailedJobCause(failedJob)
     expect(cause).toStrictEqual([])
@@ -17,9 +17,12 @@ describe('getFailedJobCause', () => {
     const failedJob: FailedJob = {
       name: 'job',
       failureStepNames: ['Run make'],
-      failureAnnotationMessages: ['message1', 'message2'],
+      failureAnnotations: [
+        { message: 'message1', path: '' },
+        { message: 'message2', path: 'src/index.ts' },
+      ],
     }
     const cause = getFailedJobCause(failedJob)
-    expect(cause).toStrictEqual(['```', 'Run make', 'message1', 'message2', '```'])
+    expect(cause).toStrictEqual(['```', 'Run make', 'message1', '```', '- src/index.ts: message2'])
   })
 })

@@ -15,7 +15,12 @@ export type WorkflowRunSummary = {
 export type FailedJob = {
   name: string
   failureStepNames: string[]
-  failureAnnotationMessages: string[]
+  failureAnnotations: Annotation[]
+}
+
+export type Annotation = {
+  message: string
+  path: string
 }
 
 type AssociatedPullRequest = {
@@ -38,16 +43,19 @@ export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery): Workflo
         failureStepNames.add(step.name)
       }
     }
-    const failureAnnotationMessages = new Set<string>()
+    const failureAnnotations = []
     for (const annotation of checkRun.annotations?.nodes ?? []) {
       if (annotation?.message && annotation.annotationLevel === CheckAnnotationLevel.Failure) {
-        failureAnnotationMessages.add(annotation.message)
+        failureAnnotations.push({
+          message: annotation.message,
+          path: annotation.path,
+        })
       }
     }
     failedJobs.push({
       name: checkRun.name,
       failureStepNames: [...failureStepNames],
-      failureAnnotationMessages: [...failureAnnotationMessages],
+      failureAnnotations,
     })
   }
 

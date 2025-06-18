@@ -32,6 +32,7 @@ const query = /* GraphQL */ `
                 nodes {
                   message
                   annotationLevel
+                  path
                 }
               }
             }

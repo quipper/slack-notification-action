@@ -47,20 +47,29 @@ const getFailedJobBlocks = (w: WorkflowRunSummary): SectionBlock[] =>
   }))
 
 export const getFailedJobCause = (failedJob: FailedJob): string[] => {
-  const failureMessages = []
-  failureMessages.push(...failedJob.failureStepNames)
-  failureMessages.push(
-    ...failedJob.failureAnnotationMessages.map((message) => {
-      if (message.length > 300) {
-        return message.substring(0, 300) + '...'
-      }
-      return message
-    }),
-  )
-  if (failureMessages.length > 0) {
-    return ['```', ...failureMessages, '```']
+  const codeBlockLines = [...failedJob.failureStepNames]
+  const rawLines = []
+
+  for (const annotation of failedJob.failureAnnotations) {
+    if (!annotation.path || annotation.path === '.github') {
+      codeBlockLines.push(trimMessage(annotation.message, 300))
+    } else {
+      rawLines.push(`- ${annotation.path}: ${trimMessage(annotation.message, 300)}`)
+    }
   }
-  return []
+
+  if (codeBlockLines.length > 0) {
+    codeBlockLines.unshift('```')
+    codeBlockLines.push('```')
+  }
+  return [...codeBlockLines, ...rawLines]
+}
+
+const trimMessage = (message: string, maxLength: number): string => {
+  if (message.length > maxLength) {
+    return message.substring(0, maxLength) + '...'
+  }
+  return message
 }
 
 const getPullRequestBlock = (w: WorkflowRunSummary): MrkdwnElement[] => {

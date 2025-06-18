@@ -50,6 +50,7 @@ describe('getWorkflowRunSummary', () => {
                     {
                       message: 'this is an example',
                       annotationLevel: CheckAnnotationLevel.Failure,
+                      path: 'src/index.ts',
                     },
                   ],
                 },
@@ -81,7 +82,12 @@ describe('getWorkflowRunSummary', () => {
         {
           name: 'jest',
           failureStepNames: ['Run make'],
-          failureAnnotationMessages: ['this is an example'],
+          failureAnnotations: [
+            {
+              message: 'this is an example',
+              path: 'src/index.ts',
+            },
+          ],
         },
       ],
       associatedPullRequest: {

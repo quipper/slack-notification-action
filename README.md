@@ -87,14 +87,12 @@ Otherwise, it inspects the current workflow run.
 
 ### Inputs
 
-| Name                               | Default         | Description                                                                            |
-| ---------------------------------- | --------------- | -------------------------------------------------------------------------------------- |
-| `slack-channel-id`                 | (required)      | ID of the Slack channel                                                                |
-| `slack-app-token`                  | (dry-run)       | Bot token of Slack App                                                                 |
-| `github-token`                     | `github.token`  | GitHub token                                                                           |
-| `lost-communication-error-message` | See action.yaml | Message to send when "The self-hosted runner lost communication with the server" error |
-| `shutdown-signal-error-message`    | See action.yaml | Message to send when "The runner has received a shutdown signal" error                 |
-| `mention-message`                  | `github.actor`  | Message to mention the current user                                                    |
+| Name               | Default        | Description                         |
+| ------------------ | -------------- | ----------------------------------- |
+| `slack-channel-id` | (required)     | ID of the Slack channel             |
+| `slack-app-token`  | (dry-run)      | Bot token of Slack App              |
+| `github-token`     | `github.token` | GitHub token                        |
+| `mention-message`  | `github.actor` | Message to mention the current user |
 
 ### Outputs
 

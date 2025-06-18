@@ -8,8 +8,6 @@ type Context = {
 }
 
 export type Templates = {
-  lostCommunicationErrorMessage: string
-  shutdownSignalErrorMessage: string
   mentionMessage: string
 }
 
@@ -24,7 +22,7 @@ export const getSlackBlocks = (w: WorkflowRunSummary, c: Context, templates: Tem
         text: `Workflow *<${w.workflowRunUrl}|${w.workflowName}>* ${conclusion.toLocaleLowerCase()}`,
       },
     },
-    ...getFailedJobBlocks(w, templates),
+    ...getFailedJobBlocks(w),
     {
       type: 'context',
       elements: [
@@ -39,25 +37,16 @@ export const getSlackBlocks = (w: WorkflowRunSummary, c: Context, templates: Tem
   ]
 }
 
-const getFailedJobBlocks = (w: WorkflowRunSummary, templates: Templates): SectionBlock[] =>
+const getFailedJobBlocks = (w: WorkflowRunSummary): SectionBlock[] =>
   w.failedJobs.map((failedJob) => ({
     type: 'section',
     text: {
       type: 'mrkdwn',
-      text: [`Job *${failedJob.name}*`, ...getFailedJobCause(failedJob, templates)].join('\n'),
+      text: [`Job *${failedJob.name}*`, ...getFailedJobCause(failedJob)].join('\n'),
     },
   }))
 
-export const getFailedJobCause = (failedJob: FailedJob, templates: Templates): string[] => {
-  for (const m of failedJob.failureAnnotationMessages) {
-    if (m.match(/The self-hosted runner: .+? lost communication with the server/)) {
-      return [templates.lostCommunicationErrorMessage]
-    }
-    if (m.match(/^The runner has received a shutdown signal./)) {
-      return [templates.shutdownSignalErrorMessage]
-    }
-  }
-
+export const getFailedJobCause = (failedJob: FailedJob): string[] => {
   const failureMessages = []
   failureMessages.push(...failedJob.failureStepNames)
   failureMessages.push(

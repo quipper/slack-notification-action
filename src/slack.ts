@@ -54,7 +54,10 @@ export const getFailedJobCause = (failedJob: FailedJob): string[] => {
     if (!annotation.path || annotation.path === '.github') {
       codeBlockLines.push(trimMessage(annotation.message, 300))
     } else {
-      rawLines.push(`- ${annotation.path}: ${trimMessage(annotation.message, 300)}`)
+      rawLines.push(annotation.path)
+      rawLines.push('```')
+      rawLines.push(trimMessage(annotation.message, 300))
+      rawLines.push('```')
     }
   }
 

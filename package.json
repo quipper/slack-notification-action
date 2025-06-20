@@ -11,7 +11,7 @@
   "dependencies": {
     "@actions/core": "1.11.1",
     "@octokit/plugin-retry": "8.0.1",
-    "@slack/web-api": "7.9.2",
+    "@slack/web-api": "7.9.3",
     "graphql": "16.11.0"
   },
   "devDependencies": {

@@ -30,13 +30,13 @@ type AssociatedPullRequest = {
 }
 
 export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery): WorkflowRunSummary => {
-  assert(workflowRun.node != null)
-  assert(workflowRun.node.__typename === 'WorkflowRun')
+  assert(workflowRun.node != null, `workflowRun.node must not be null`)
+  assert.strictEqual(workflowRun.node.__typename, 'WorkflowRun')
   const checkSuite = workflowRun.node.checkSuite
 
   const failedJobs: FailedJob[] = []
   for (const checkRun of checkSuite.failedCheckRuns?.nodes ?? []) {
-    assert(checkRun != null)
+    assert(checkRun != null, `checkRun must not be null`)
     const failureStepNames = new Set<string>()
     for (const step of checkRun.steps?.nodes ?? []) {
       if (step?.conclusion === CheckConclusionState.Failure) {
@@ -71,16 +71,16 @@ export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery): Workflo
 }
 
 const getAssociatedPullRequest = (workflowRun: GetWorkflowRunQuery): AssociatedPullRequest | undefined => {
-  assert(workflowRun.node != null)
-  assert(workflowRun.node.__typename === 'WorkflowRun')
+  assert(workflowRun.node != null, `workflowRun.node must not be null`)
+  assert.strictEqual(workflowRun.node.__typename, 'WorkflowRun')
   const associatedPullRequests = workflowRun.node.checkSuite.commit.associatedPullRequests
-  assert(associatedPullRequests != null)
-  assert(associatedPullRequests.nodes != null)
+  assert(associatedPullRequests != null, `associatedPullRequests must not be null`)
+  assert(associatedPullRequests.nodes != null, `associatedPullRequests.nodes must not be null`)
   if (associatedPullRequests.nodes.length === 0) {
     return
   }
   const pull = associatedPullRequests.nodes[0]
-  assert(pull != null)
+  assert(pull != null, `pull must not be null`)
   return {
     number: pull.number,
     url: pull.url,

@@ -7,6 +7,7 @@ export type WorkflowRunSummary = {
   workflowRunUrl: string
   event: string
   branch: string | undefined
+  sha: string
   conclusion: CheckConclusionState | null | undefined
   failedJobs: FailedJob[]
   associatedPullRequest: AssociatedPullRequest | undefined
@@ -64,6 +65,7 @@ export const getWorkflowRunSummary = (workflowRun: GetWorkflowRunQuery): Workflo
     workflowRunUrl: workflowRun.node.url,
     event: workflowRun.node.event,
     branch: checkSuite.branch?.name,
+    sha: checkSuite.commit.oid,
     conclusion: checkSuite.conclusion,
     failedJobs,
     associatedPullRequest: getAssociatedPullRequest(workflowRun),

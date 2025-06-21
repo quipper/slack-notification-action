@@ -2,8 +2,12 @@ import { KnownBlock, MrkdwnElement, SectionBlock } from '@slack/web-api'
 import { FailedJob, WorkflowRunSummary } from './workflow-run.js'
 
 type Context = {
-  repository: string
+  repo: {
+    owner: string
+    repo: string
+  }
   actor: string
+  serverUrl: string
   currentJobStatus: string
 }
 
@@ -11,9 +15,10 @@ export type Templates = {
   mentionMessage: string
 }
 
-export const getSlackBlocks = (w: WorkflowRunSummary, c: Context, templates: Templates): KnownBlock[] => {
+export const getSlackBlocks = (w: WorkflowRunSummary, context: Context, templates: Templates): KnownBlock[] => {
   // When the current workflow run is still running, use the current job status.
-  const conclusion = w.conclusion ?? c.currentJobStatus
+  const conclusion = w.conclusion ?? context.currentJobStatus
+  const blobUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/blob/${w.sha}`
   return [
     {
       type: 'section',
@@ -22,13 +27,13 @@ export const getSlackBlocks = (w: WorkflowRunSummary, c: Context, templates: Tem
         text: `Workflow *<${w.workflowRunUrl}|${w.workflowName}>* ${conclusion.toLocaleLowerCase()}`,
       },
     },
-    ...getFailedJobBlocks(w),
+    ...getFailedJobBlocks(w, blobUrl),
     {
       type: 'context',
       elements: [
         {
           type: 'mrkdwn',
-          text: `:github: ${c.repository}/*${w.branch}*`,
+          text: `:github: ${context.repo.repo}/*${w.branch}*`,
         },
         ...getPullRequestBlock(w),
         ...getMentionBlock(w, templates),
@@ -37,16 +42,16 @@ export const getSlackBlocks = (w: WorkflowRunSummary, c: Context, templates: Tem
   ]
 }
 
-const getFailedJobBlocks = (w: WorkflowRunSummary): SectionBlock[] =>
+const getFailedJobBlocks = (w: WorkflowRunSummary, blobUrl: string): SectionBlock[] =>
   w.failedJobs.map((failedJob) => ({
     type: 'section',
     text: {
       type: 'mrkdwn',
-      text: [`Job *${failedJob.name}*`, ...getFailedJobCause(failedJob)].join('\n'),
+      text: [`Job *${failedJob.name}*`, ...getFailedJobCause(failedJob, blobUrl)].join('\n'),
     },
   }))
 
-export const getFailedJobCause = (failedJob: FailedJob): string[] => {
+export const getFailedJobCause = (failedJob: FailedJob, blobUrl: string): string[] => {
   const withoutPath = [...failedJob.failureStepNames]
   const byPath = new Map<string, string[]>()
 
@@ -67,7 +72,7 @@ export const getFailedJobCause = (failedJob: FailedJob): string[] => {
 
   const withPath = []
   for (const [path, pathMessages] of byPath.entries()) {
-    withPath.push(path)
+    withPath.push(`<${blobUrl}/${path}|${path}>`)
     withPath.push('```')
     withPath.push(...pathMessages)
     withPath.push('```')

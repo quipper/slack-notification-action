@@ -47,7 +47,7 @@ const getFailedJobBlocks = (w: WorkflowRunSummary): SectionBlock[] =>
   }))
 
 export const getFailedJobCause = (failedJob: FailedJob): string[] => {
-  const withoutPath = []
+  const withoutPath = [...failedJob.failureStepNames]
   const byPath = new Map<string, string[]>()
 
   for (const annotation of failedJob.failureAnnotations) {
@@ -72,7 +72,7 @@ export const getFailedJobCause = (failedJob: FailedJob): string[] => {
     withPath.push(...pathMessages)
     withPath.push('```')
   }
-  return [...failedJob.failureStepNames, ...withoutPath, ...withPath]
+  return [...withoutPath, ...withPath]
 }
 
 const trimMessage = (message: string, maxLength: number): string => {

@@ -47,25 +47,32 @@ const getFailedJobBlocks = (w: WorkflowRunSummary): SectionBlock[] =>
   }))
 
 export const getFailedJobCause = (failedJob: FailedJob): string[] => {
-  const codeBlockLines = [...failedJob.failureStepNames]
-  const rawLines = []
+  const withoutPath = []
+  const byPath = new Map<string, string[]>()
 
   for (const annotation of failedJob.failureAnnotations) {
     if (!annotation.path || annotation.path === '.github') {
-      codeBlockLines.push(trimMessage(annotation.message, 300))
+      withoutPath.push(trimMessage(annotation.message, 300))
     } else {
-      rawLines.push(annotation.path)
-      rawLines.push('```')
-      rawLines.push(trimMessage(annotation.message, 300))
-      rawLines.push('```')
+      const messages = byPath.get(annotation.path) ?? []
+      messages.push(trimMessage(annotation.message, 300))
+      byPath.set(annotation.path, messages)
     }
   }
 
-  if (codeBlockLines.length > 0) {
-    codeBlockLines.unshift('```')
-    codeBlockLines.push('```')
+  if (withoutPath.length > 0) {
+    withoutPath.unshift('```')
+    withoutPath.push('```')
   }
-  return [...codeBlockLines, ...rawLines]
+
+  const withPath = []
+  for (const [path, pathMessages] of byPath.entries()) {
+    withPath.push(path)
+    withPath.push('```')
+    withPath.push(...pathMessages)
+    withPath.push('```')
+  }
+  return [...failedJob.failureStepNames, ...withoutPath, ...withPath]
 }
 
 const trimMessage = (message: string, maxLength: number): string => {

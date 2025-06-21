@@ -58,6 +58,7 @@ describe('getWorkflowRunSummary', () => {
             ],
           },
           commit: {
+            oid: '1234567890abcdef1234567890abcdef12345678',
             associatedPullRequests: {
               totalCount: 1,
               nodes: [
@@ -77,6 +78,7 @@ describe('getWorkflowRunSummary', () => {
       workflowRunUrl: 'https://github.com/int128/workflow-run-summary-action/actions/runs/5861542956',
       event: 'push',
       branch: 'main',
+      sha: '1234567890abcdef1234567890abcdef12345678',
       conclusion: CheckConclusionState.Failure,
       failedJobs: [
         {
@@ -114,6 +116,7 @@ describe('getWorkflowRunSummary', () => {
             nodes: [],
           },
           commit: {
+            oid: '1234567890abcdef1234567890abcdef12345678',
             associatedPullRequests: {
               totalCount: 0,
               nodes: [],
@@ -127,6 +130,7 @@ describe('getWorkflowRunSummary', () => {
       workflowRunUrl: 'https://github.com/int128/workflow-run-summary-action/actions/runs/5861542956',
       event: 'push',
       branch: undefined,
+      sha: '1234567890abcdef1234567890abcdef12345678',
       conclusion: undefined,
       failedJobs: [],
       associatedPullRequest: undefined,

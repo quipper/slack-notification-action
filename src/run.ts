@@ -42,8 +42,9 @@ const send = async (summary: WorkflowRunSummary, inputs: Inputs, context: github
   const blocks = getSlackBlocks(
     summary,
     {
-      repository: context.repo.repo,
+      repo: context.repo,
       actor: context.actor,
+      serverUrl: context.serverUrl,
       currentJobStatus: inputs.githubCurrentJobStatus,
     },
     inputs,

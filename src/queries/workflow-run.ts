@@ -38,6 +38,7 @@ const query = /* GraphQL */ `
             }
           }
           commit {
+            oid
             associatedPullRequests(first: 1) {
               totalCount
               nodes {

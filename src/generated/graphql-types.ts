@@ -24,7 +24,7 @@ export type Scalars = {
   /** An ISO-8601 encoded UTC date string. */
   DateTime: { input: any; output: any; }
   /** A Git object ID. */
-  GitObjectID: { input: any; output: any; }
+  GitObjectID: { input: string; output: string; }
   /** A fully qualified reference name (e.g. `refs/heads/master`). */
   GitRefname: { input: any; output: any; }
   /** Git SSH string */

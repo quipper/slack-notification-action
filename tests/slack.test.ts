@@ -9,7 +9,10 @@ describe('getFailedJobCause', () => {
       failureStepNames: [],
       failureAnnotations: [],
     }
-    const cause = getFailedJobCause(failedJob)
+    const cause = getFailedJobCause(
+      failedJob,
+      'https://github.com/quipper/slack-notification-action/blob/1234567890abcdef1234567890abcdef12345678',
+    )
     expect(cause).toStrictEqual([])
   })
 
@@ -22,7 +25,19 @@ describe('getFailedJobCause', () => {
         { message: 'message2', path: 'src/index.ts' },
       ],
     }
-    const cause = getFailedJobCause(failedJob)
-    expect(cause).toStrictEqual(['```', 'Run make', 'message1', '```', 'src/index.ts', '```', 'message2', '```'])
+    const cause = getFailedJobCause(
+      failedJob,
+      'https://github.com/quipper/slack-notification-action/blob/1234567890abcdef1234567890abcdef12345678',
+    )
+    expect(cause).toStrictEqual([
+      '```',
+      'Run make',
+      'message1',
+      '```',
+      '<https://github.com/quipper/slack-notification-action/blob/1234567890abcdef1234567890abcdef12345678/src/index.ts|src/index.ts>',
+      '```',
+      'message2',
+      '```',
+    ])
   })
 })

@@ -11,13 +11,15 @@ const main = async (): Promise<void> => {
       slackAppToken: core.getInput('slack-app-token'),
       mentionMessage: core.getInput('mention-message'),
       githubCurrentJobStatus: core.getInput('github-job-status', { required: true }),
-      githubContext: await github.getContext(),
     },
     octokit,
+    await github.getContext(),
   )
 }
 
-main().catch((e: Error) => {
-  core.setFailed(e)
+try {
+  await main()
+} catch (e) {
+  core.setFailed(e instanceof Error ? e : String(e))
   console.error(e)
-})
+}

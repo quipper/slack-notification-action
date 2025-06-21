@@ -1,7 +1,6 @@
 import * as core from '@actions/core'
 import * as github from './github.js'
 import * as slack from '@slack/web-api'
-import * as webhook from '@octokit/webhooks-types'
 import { Octokit } from '@octokit/action'
 import { getSlackBlocks, Templates } from './slack.js'
 import { getWorkflowRun } from './queries/workflow-run.js'
@@ -12,11 +11,10 @@ type Inputs = {
   slackChannelId: string
   slackAppToken: string
   githubCurrentJobStatus: string
-  githubContext: github.Context
 } & Templates
 
-export const run = async (inputs: Inputs, octokit: Octokit): Promise<void> => {
-  const workflowRun = await getWorkflowRunForEvent(octokit, inputs.githubContext)
+export const run = async (inputs: Inputs, octokit: Octokit, context: github.Context): Promise<void> => {
+  const workflowRun = await getWorkflowRunForEvent(octokit, context)
   const summary = getWorkflowRunSummary(workflowRun)
   core.startGroup(`WorkflowRunSummary`)
   core.info(JSON.stringify(summary, undefined, 2))
@@ -24,28 +22,28 @@ export const run = async (inputs: Inputs, octokit: Octokit): Promise<void> => {
 
   if (summary.failedJobs.length > 0) {
     core.info(`Found ${summary.failedJobs.length} failed jobs`)
-    return await send(summary, inputs)
+    return await send(summary, inputs, context)
   }
   if (inputs.githubCurrentJobStatus === 'failure') {
     core.info('The current job is failing')
-    return await send(summary, inputs)
+    return await send(summary, inputs, context)
   }
   switch (summary.conclusion) {
     case CheckConclusionState.Success:
     case CheckConclusionState.TimedOut:
     case CheckConclusionState.ActionRequired:
     case CheckConclusionState.StartupFailure:
-      return await send(summary, inputs)
+      return await send(summary, inputs, context)
   }
   core.info('Nothing sent')
 }
 
-const send = async (summary: WorkflowRunSummary, inputs: Inputs) => {
+const send = async (summary: WorkflowRunSummary, inputs: Inputs, context: github.Context) => {
   const blocks = getSlackBlocks(
     summary,
     {
-      repository: inputs.githubContext.repo.repo,
-      actor: inputs.githubContext.actor,
+      repository: context.repo.repo,
+      actor: context.actor,
       currentJobStatus: inputs.githubCurrentJobStatus,
     },
     inputs,
@@ -65,10 +63,9 @@ const send = async (summary: WorkflowRunSummary, inputs: Inputs) => {
 }
 
 const getWorkflowRunForEvent = async (octokit: Octokit, context: github.Context) => {
-  if (context.eventName === 'workflow_run') {
-    const payload = context.payload as webhook.WorkflowRunEvent
-    core.info(`Getting the target workflow run ${payload.workflow_run.node_id}`)
-    return await getWorkflowRun(octokit, { id: payload.workflow_run.node_id })
+  if ('workflow_run' in context.payload && context.payload.workflow_run != null) {
+    core.info(`Getting the target workflow run ${context.payload.workflow_run.node_id}`)
+    return await getWorkflowRun(octokit, { id: context.payload.workflow_run.node_id })
   }
 
   core.info(`Getting the current workflow run ${context.runId}`)

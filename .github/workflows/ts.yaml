@@ -54,8 +54,7 @@ jobs:
           package-manager-cache: false
       - run: npm install -g pnpm@latest-10
       - run: pnpm i
-      - run: pnpm lint --fix
-      - run: pnpm format
+      - run: pnpm run check --fix
       - run: pnpm graphql-codegen
       - uses: int128/update-generated-files-action@cb476932f792a2cc2409c6d2af6db9d39f5e296b # v2.62.0
 

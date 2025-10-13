@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { getFailedJobCause } from '../src/slack.js'
-import { FailedJob } from '../src/workflow-run.js'
+import type { FailedJob } from '../src/workflow-run.js'
 
 describe('getFailedJobCause', () => {
   it('returns empty array when the messages are empty', () => {

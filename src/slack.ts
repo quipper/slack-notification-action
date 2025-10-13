@@ -1,5 +1,5 @@
-import { KnownBlock, MrkdwnElement, SectionBlock } from '@slack/web-api'
-import { FailedJob, WorkflowRunSummary } from './workflow-run.js'
+import type { KnownBlock, MrkdwnElement, SectionBlock } from '@slack/web-api'
+import type { FailedJob, WorkflowRunSummary } from './workflow-run.js'
 
 type Context = {
   repo: {
@@ -82,7 +82,7 @@ export const getFailedJobCause = (failedJob: FailedJob, blobUrl: string): string
 
 const trimMessage = (message: string, maxLength: number): string => {
   if (message.length > maxLength) {
-    return message.substring(0, maxLength) + '...'
+    return `${message.substring(0, maxLength)}...`
   }
   return message
 }

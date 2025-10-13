@@ -1,11 +1,11 @@
 import * as core from '@actions/core'
-import * as github from './github.js'
+import type { Octokit } from '@octokit/action'
 import * as slack from '@slack/web-api'
-import { Octokit } from '@octokit/action'
-import { getSlackBlocks, Templates } from './slack.js'
-import { getWorkflowRun } from './queries/workflow-run.js'
-import { getWorkflowRunSummary, WorkflowRunSummary } from './workflow-run.js'
 import { CheckConclusionState } from './generated/graphql-types.js'
+import type * as github from './github.js'
+import { getWorkflowRun } from './queries/workflow-run.js'
+import { getSlackBlocks, type Templates } from './slack.js'
+import { getWorkflowRunSummary, type WorkflowRunSummary } from './workflow-run.js'
 
 type Inputs = {
   slackChannelId: string

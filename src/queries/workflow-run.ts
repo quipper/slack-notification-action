@@ -1,5 +1,5 @@
-import { Octokit } from '@octokit/action'
-import { GetWorkflowRunQuery, GetWorkflowRunQueryVariables } from '../generated/graphql.js'
+import type { Octokit } from '@octokit/action'
+import type { GetWorkflowRunQuery, GetWorkflowRunQueryVariables } from '../generated/graphql.js'
 
 const query = /* GraphQL */ `
   query getWorkflowRun($id: ID!) {

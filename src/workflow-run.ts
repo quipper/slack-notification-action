@@ -1,5 +1,5 @@
-import assert from 'assert'
-import { GetWorkflowRunQuery } from './generated/graphql.js'
+import assert from 'node:assert'
+import type { GetWorkflowRunQuery } from './generated/graphql.js'
 import { CheckAnnotationLevel, CheckConclusionState } from './generated/graphql-types.js'
 
 export type WorkflowRunSummary = {

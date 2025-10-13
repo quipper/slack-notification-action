@@ -1,11 +1,13 @@
-import * as Types from './graphql-types.js';
+import type * as Types from './graphql-types.js'
 
 export type GetWorkflowRunQueryVariables = Types.Exact<{
-  id: Types.Scalars['ID']['input'];
-}>;
+  id: Types.Scalars['ID']['input']
+}>
 
-
-export type GetWorkflowRunQuery = { __typename?: 'Query', rateLimit?: { __typename?: 'RateLimit', cost: number } | null, node?:
+export type GetWorkflowRunQuery = {
+  __typename?: 'Query'
+  rateLimit?: { __typename?: 'RateLimit'; cost: number } | null
+  node?:
     | { __typename: 'AddedToMergeQueueEvent' }
     | { __typename: 'AddedToProjectEvent' }
     | { __typename: 'App' }
@@ -253,6 +255,50 @@ export type GetWorkflowRunQuery = { __typename?: 'Query', rateLimit?: { __typena
     | { __typename: 'UserStatus' }
     | { __typename: 'VerifiableDomain' }
     | { __typename: 'Workflow' }
-    | { __typename: 'WorkflowRun', url: string, event: string, workflow: { __typename?: 'Workflow', name: string }, checkSuite: { __typename?: 'CheckSuite', conclusion?: Types.CheckConclusionState | null, branch?: { __typename?: 'Ref', name: string } | null, failedCheckRuns?: { __typename?: 'CheckRunConnection', nodes?: Array<{ __typename?: 'CheckRun', name: string, steps?: { __typename?: 'CheckStepConnection', nodes?: Array<{ __typename?: 'CheckStep', name: string, conclusion?: Types.CheckConclusionState | null } | null> | null } | null, annotations?: { __typename?: 'CheckAnnotationConnection', nodes?: Array<{ __typename?: 'CheckAnnotation', message: string, annotationLevel?: Types.CheckAnnotationLevel | null, path: string } | null> | null } | null } | null> | null } | null, commit: { __typename?: 'Commit', oid: string, associatedPullRequests?: { __typename?: 'PullRequestConnection', totalCount: number, nodes?: Array<{ __typename?: 'PullRequest', number: number, url: string, title: string } | null> | null } | null } } }
+    | {
+        __typename: 'WorkflowRun'
+        url: string
+        event: string
+        workflow: { __typename?: 'Workflow'; name: string }
+        checkSuite: {
+          __typename?: 'CheckSuite'
+          conclusion?: Types.CheckConclusionState | null
+          branch?: { __typename?: 'Ref'; name: string } | null
+          failedCheckRuns?: {
+            __typename?: 'CheckRunConnection'
+            nodes?: Array<{
+              __typename?: 'CheckRun'
+              name: string
+              steps?: {
+                __typename?: 'CheckStepConnection'
+                nodes?: Array<{
+                  __typename?: 'CheckStep'
+                  name: string
+                  conclusion?: Types.CheckConclusionState | null
+                } | null> | null
+              } | null
+              annotations?: {
+                __typename?: 'CheckAnnotationConnection'
+                nodes?: Array<{
+                  __typename?: 'CheckAnnotation'
+                  message: string
+                  annotationLevel?: Types.CheckAnnotationLevel | null
+                  path: string
+                } | null> | null
+              } | null
+            } | null> | null
+          } | null
+          commit: {
+            __typename?: 'Commit'
+            oid: string
+            associatedPullRequests?: {
+              __typename?: 'PullRequestConnection'
+              totalCount: number
+              nodes?: Array<{ __typename?: 'PullRequest'; number: number; url: string; title: string } | null> | null
+            } | null
+          }
+        }
+      }
     | { __typename: 'WorkflowRunFile' }
-   | null };
+    | null
+}

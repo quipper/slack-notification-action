@@ -13,4 +13,7 @@
     "renovate",
     "renovate/{{depName}}",
   ],
+  "timezone": "Asia/Tokyo",
+  "schedule": ["before 9am on Monday"],
+  "minimumReleaseAge": "7 days"
 }

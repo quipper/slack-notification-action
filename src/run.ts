@@ -9,7 +9,8 @@ import { getWorkflowRunSummary, type WorkflowRunSummary } from './workflow-run.j
 
 type Inputs = {
   slackChannelId: string
-  slackAppToken: string
+  slackThreadTs?: string
+  slackAppToken?: string
   githubCurrentJobStatus: string
 } & Templates
 
@@ -51,13 +52,14 @@ const send = async (summary: WorkflowRunSummary, inputs: Inputs, context: github
   )
   core.info(`Sending the message: ${JSON.stringify(blocks, undefined, 2)}`)
 
-  if (inputs.slackAppToken === '') {
+  if (!inputs.slackAppToken) {
     core.warning('slack-app-token is not set. Skip sending the message to Slack.')
     return
   }
   const slackClient = new slack.WebClient(inputs.slackAppToken)
   await slackClient.chat.postMessage({
     channel: inputs.slackChannelId,
+    thread_ts: inputs.slackThreadTs,
     blocks,
   })
   core.info('Sent the message to Slack')

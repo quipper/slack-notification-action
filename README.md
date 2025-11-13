@@ -55,7 +55,7 @@ name: slack-notification
 on:
   workflow_run:
     workflows:
-      - '**'
+      - "**"
       # you can exclude some workflows, like:
       # - '!*-metrics'
     branches:
@@ -87,12 +87,13 @@ Otherwise, it inspects the current workflow run.
 
 ### Inputs
 
-| Name               | Default        | Description                         |
-| ------------------ | -------------- | ----------------------------------- |
-| `slack-channel-id` | (required)     | ID of the Slack channel             |
-| `slack-app-token`  | (dry-run)      | Bot token of Slack App              |
-| `github-token`     | `github.token` | GitHub token                        |
-| `mention-message`  | `github.actor` | Message to mention the current user |
+| Name               | Default        | Description                                                             |
+| ------------------ | -------------- | ----------------------------------------------------------------------- |
+| `slack-channel-id` | (required)     | ID of the Slack channel                                                 |
+| `slack-thread-ts`  | -              | Thread timestamp to post message in                                     |
+| `slack-app-token`  | -              | Bot token of Slack App. If not set, dry run is performed                |
+| `github-token`     | `github.token` | GitHub token                                                            |
+| `mention-message`  | `github.actor` | Message to mention the current user. Set to empty to disable mentioning |
 
 ### Outputs
 

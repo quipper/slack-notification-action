@@ -5,9 +5,12 @@ inputs:
   slack-channel-id:
     description: ID of the Slack channel
     required: true
+  slack-thread-ts:
+    description: Thread timestamp to post message in
+    required: false
   slack-app-token:
-    description: Bot token of Slack App
-    required: true
+    description: Bot token of Slack App. If not set, dry run is performed
+    required: false
   github-token:
     description: GitHub token (optional)
     required: true

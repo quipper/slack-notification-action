@@ -8,8 +8,9 @@ const main = async (): Promise<void> => {
   await run(
     {
       slackChannelId: core.getInput('slack-channel-id', { required: true }),
-      slackAppToken: core.getInput('slack-app-token'),
-      mentionMessage: core.getInput('mention-message'),
+      slackThreadTs: core.getInput('slack-thread-ts') || undefined,
+      slackAppToken: core.getInput('slack-app-token') || undefined,
+      mentionMessage: core.getInput('mention-message') || undefined,
       githubCurrentJobStatus: core.getInput('github-job-status', { required: true }),
     },
     octokit,

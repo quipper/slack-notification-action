@@ -12,7 +12,7 @@ type Context = {
 }
 
 export type Templates = {
-  mentionMessage: string
+  mentionMessage?: string
 }
 
 export const getSlackBlocks = (w: WorkflowRunSummary, context: Context, templates: Templates): KnownBlock[] => {
@@ -108,7 +108,7 @@ const getMentionBlock = (w: WorkflowRunSummary, templates: Templates): MrkdwnEle
     // For a scheduled event, github.actor is the last committer. Do not mention it.
     return []
   }
-  if (templates.mentionMessage === '') {
+  if (!templates.mentionMessage) {
     return []
   }
   return [

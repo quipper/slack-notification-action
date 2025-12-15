@@ -15,8 +15,8 @@ importers:
         specifier: 8.0.3
         version: 8.0.3(@octokit/core@7.0.6)
       '@slack/web-api':
-        specifier: 7.12.0
-        version: 7.12.0
+        specifier: 7.13.0
+        version: 7.13.0
       graphql:
         specifier: 16.12.0
         version: 16.12.0
@@ -1356,8 +1356,8 @@ packages:
     resolution: {integrity: sha512-ZKrdeoppbM+3l2KKOi4/3oFYKCEwiW3dQfdHZDcecJ9rAmEqWPnARYmac9taZNitb0xnSgu6GOpHgwaKI8se2g==}
     engines: {node: '>= 12.13.0', npm: '>= 6.12.0'}
 
-  '@slack/web-api@7.12.0':
-    resolution: {integrity: sha512-LrDxjYyqjeYYQGVdVZ6EYHunFmzveOr2pFpShr6TzW4KNFpdNNnpKekjtMg0PJlOsMibSySLGQqiBZQDasmRCA==}
+  '@slack/web-api@7.13.0':
+    resolution: {integrity: sha512-ERcExbWrnkDN8ovoWWe6Wgt/usanj1dWUd18dJLpctUI4mlPS0nKt81Joh8VI+OPbNnY1lIilVt9gdMBD9U2ig==}
     engines: {node: '>= 18', npm: '>= 8.6.0'}
 
   '@standard-schema/spec@1.0.0':
@@ -4367,7 +4367,7 @@ snapshots:
 
   '@slack/types@2.18.0': {}
 
-  '@slack/web-api@7.12.0':
+  '@slack/web-api@7.13.0':
     dependencies:
       '@slack/logger': 4.0.0
       '@slack/types': 2.18.0

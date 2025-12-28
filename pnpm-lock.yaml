@@ -46,8 +46,8 @@ importers:
         specifier: 7.6.1
         version: 7.6.1
       '@tsconfig/node22':
-        specifier: 22.0.0
-        version: 22.0.0
+        specifier: 22.0.5
+        version: 22.0.5
       '@types/node':
         specifier: 20.19.27
         version: 20.19.27
@@ -1363,8 +1363,8 @@ packages:
   '@standard-schema/spec@1.0.0':
     resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
 
-  '@tsconfig/node22@22.0.0':
-    resolution: {integrity: sha512-twLQ77zevtxobBOD4ToAtVmuYrpeYUh3qh+TEp+08IWhpsrIflVHqQ1F1CiPxQGL7doCdBIOOCF+1Tm833faNg==}
+  '@tsconfig/node22@22.0.5':
+    resolution: {integrity: sha512-hLf2ld+sYN/BtOJjHUWOk568dvjFQkHnLNa6zce25GIH+vxKfvTgm3qpaH6ToF5tu/NN0IH66s+Bb5wElHrLcw==}
 
   '@types/chai@5.2.2':
     resolution: {integrity: sha512-8kB30R7Hwqf40JPiKhVzodJs2Qc1ZJ5zuT3uzw5Hq/dhNCl3G3l83jfpdI1e20BP348+fV7VIL/+FxaXkqBmWg==}
@@ -4386,7 +4386,7 @@ snapshots:
 
   '@standard-schema/spec@1.0.0': {}
 
-  '@tsconfig/node22@22.0.0': {}
+  '@tsconfig/node22@22.0.5': {}
 
   '@types/chai@5.2.2':
     dependencies:

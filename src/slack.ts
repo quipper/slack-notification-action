@@ -88,17 +88,19 @@ const trimMessage = (message: string, maxLength: number): string => {
 }
 
 const getPullRequestBlock = (w: WorkflowRunSummary): MrkdwnElement[] => {
-  if (!w.associatedPullRequest) {
-    return []
-  }
-  if (w.event === 'schedule') {
-    // For a scheduled event, do not show the last commit.
-    return []
+  const relatedEvents = ['push', 'pull_request']
+  if (w.associatedPullRequest && relatedEvents.includes(w.event)) {
+    return [
+      {
+        type: 'mrkdwn',
+        text: `(${w.event}) :pr_merged: <${w.associatedPullRequest.url}|#${w.associatedPullRequest.number}> ${w.associatedPullRequest.title}`,
+      },
+    ]
   }
   return [
     {
       type: 'mrkdwn',
-      text: `:pr_merged: <${w.associatedPullRequest.url}|#${w.associatedPullRequest.number}> ${w.associatedPullRequest.title}`,
+      text: `(${w.event})`,
     },
   ]
 }

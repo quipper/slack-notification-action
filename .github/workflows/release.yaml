@@ -25,6 +25,6 @@ jobs:
       - run: npm install -g pnpm@latest-10
       - run: pnpm i
       - run: pnpm build
-      - uses: int128/release-typescript-action@ba9f51ae5166ec5381c0676ed3641502a7cbd35e # v1.73.0
+      - uses: int128/release-typescript-action@6f9f7cb3067af6287e183fb4f06d97bba74c3756 # v1.76.0
         with:
           major-version: 2

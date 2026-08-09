@@ -9,7 +9,7 @@
   "type": "module",
   "dependencies": {
     "@actions/core": "3.0.1",
-    "@octokit/plugin-retry": "8.1.0",
+    "@octokit/plugin-retry": "8.1.1",
     "@slack/web-api": "7.19.0",
     "graphql": "16.14.2"
   },

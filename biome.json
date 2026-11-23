@@ -1,8 +1,9 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.2.5/schema.json",
-  "files": {
-    "ignoreUnknown": true,
-    "includes": ["**", "!src/generated"]
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
   },
   "formatter": {
     "indentStyle": "space",
@@ -16,5 +17,8 @@
       "quoteStyle": "single",
       "semicolons": "asNeeded"
     }
+  },
+  "files": {
+    "includes": ["**", "!src/generated", "!.github/workflows"]
   }
 }
